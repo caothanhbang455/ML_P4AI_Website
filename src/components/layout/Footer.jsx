@@ -4,7 +4,7 @@ const Footer = () => (
       <p className="text-slate-400 text-sm italic">
         Ho Chi Minh City University of Technology (HCMUT) - CO3135 [cite: 11]
       </p>
-      <p className="text-slate-500 text-xs mt-2 font-medium">© 2026 Group APT. All rights reserved.</p>
+      <p className="text-slate-500 text-xs mt-2 font-medium">© 2026 Group ABT. All rights reserved.</p>
     </div>
   </footer>
 );

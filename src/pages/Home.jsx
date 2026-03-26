@@ -7,7 +7,7 @@ const Home = () => (
   <div className="max-w-7xl mx-auto px-4 py-16">
     <motion.section initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="text-center py-24 bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-800 rounded-[3rem] text-white mb-20 shadow-2xl relative overflow-hidden">
       <div className="relative z-10">
-        <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight">Group APT</h1>
+        <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight">Group ABT</h1>
         <p className="text-xl md:text-2xl font-light opacity-90 max-w-2xl mx-auto leading-relaxed">Programming for AI & Data Science (CO3135) [cite: 7]</p>
         <div className="mt-10 flex flex-wrap justify-center gap-4">
           <span className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 text-sm font-semibold tracking-wide">
