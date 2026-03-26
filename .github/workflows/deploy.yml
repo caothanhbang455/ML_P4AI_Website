@@ -1,14 +1,11 @@
 name: Deploy Vite React App to GitHub Pages
-
 on:
   push:
     branches: [ "main" ]
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,13 +20,11 @@ jobs:
       - name: Install deps
         run: npm install
       - name: Build
-        # Thêm CI=false để bỏ qua các lỗi linting/warning nhỏ khi build
-        run: CI=false npm run build
+        run: CI=false npm run build # Bỏ qua cảnh báo để build thành công
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
-
   deploy:
     needs: build
     runs-on: ubuntu-latest

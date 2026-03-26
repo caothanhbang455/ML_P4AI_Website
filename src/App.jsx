@@ -6,10 +6,10 @@ import Assignment1 from './pages/Assignment1';
 
 function App() {
   return (
-    <Router basename="/Ten_Repo_Cua_Bạn"> {/* Đổi tên repo để deploy GitHub Pages */}
-      <div className="min-h-screen flex flex-col">
+    <Router basename="/ML_P4AI_Website">
+      <div className="min-h-screen flex flex-col font-sans">
         <Navbar />
-        <main className="flex-grow">
+        <main className="flex-grow bg-slate-50/50">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/assignment-1" element={<Assignment1 />} />
@@ -20,5 +20,4 @@ function App() {
     </Router>
   );
 }
-
 export default App;
