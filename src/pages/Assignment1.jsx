@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Type, ImageIcon, FileDown, CheckCircle } from 'lucide-react';
-import { FaYoutube, FaGithub } from 'react-icons/fa';
+import { FileText, Type, ImageIcon, CheckCircle } from 'lucide-react';
+import TabularEDA from '../components/assignment1/TabularEDA';
 
 const Assignment1 = () => {
   const [activeTab, setActiveTab] = useState('tabular');
@@ -13,35 +13,12 @@ const Assignment1 = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
+    <div className="max-w-[1600px] w-full mx-auto px-4 py-16">
       {/* HEADER */}
-      <div className="mb-16 border-b border-slate-200 pb-12">
-        <h1 className="text-4xl font-black mb-8 tracking-tight italic">
+      <div className="mb-16 border-b border-slate-200 pb-8">
+        <h1 className="text-4xl font-black tracking-tight italic">
           Assignment 1: EDA Report
         </h1>
-
-        <div className="flex flex-wrap gap-4">
-          <a
-            href="#"
-            className="flex items-center gap-3 bg-red-600 text-white px-6 py-3 rounded-2xl font-bold hover:bg-red-700 shadow-lg shadow-red-100 transition-all active:scale-95"
-          >
-            <FaYoutube size={20} /> Presentation Video
-          </a>
-
-          <a
-            href="#"
-            className="flex items-center gap-3 bg-slate-900 text-white px-6 py-3 rounded-2xl font-bold hover:bg-black shadow-lg shadow-slate-200 transition-all active:scale-95"
-          >
-            <FaGithub size={20} /> Code Repository
-          </a>
-
-          <a
-            href="#"
-            className="flex items-center gap-3 bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-100 transition-all active:scale-95"
-          >
-            <FileDown size={20} /> PDF Report
-          </a>
-        </div>
       </div>
 
       {/* TABS */}
@@ -68,40 +45,44 @@ const Assignment1 = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="bg-white p-12 rounded-[3rem] shadow-sm border border-slate-100 min-h-[500px]"
+          className="bg-white p-8 md:p-12 rounded-[3rem] shadow-sm border border-slate-100 min-h-[1200px] flex flex-col"
         >
           {activeTab === 'tabular' && (
-            <div className="animate-in fade-in duration-500">
-              <h2 className="text-3xl font-black mb-6 text-blue-600">
-                Tabular Data Exploration
+            <TabularEDA />
+          )}
+
+          {activeTab === 'text' && (
+            <div className="animate-in fade-in duration-500 flex-grow flex flex-col">
+              <h2 className="text-3xl font-black mb-6 text-indigo-600">
+                Text Data Exploration
               </h2>
 
               <p className="text-slate-500 text-lg mb-10 leading-relaxed">
-                Phân tích dữ liệu dạng bảng, kiểm tra phân phối nhãn và xử lý các giá trị thiếu.
+                Phân tích dữ liệu văn bản, làm sạch dữ liệu và trích xuất đặc trưng (TF-IDF, Word Embeddings).
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Chart placeholder */}
-                <div className="bg-slate-50 h-80 rounded-[2rem] border border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 font-medium">
-                  <span className="mb-2">Chart: Label Distribution</span>
+              <div className="flex flex-col gap-8 flex-grow">
+                {/* Chart placeholder - Make it bigger */}
+                <div className="bg-slate-50 min-h-[800px] flex-grow rounded-[2rem] border border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 font-medium w-full text-xl shadow-[inset_0_0_50px_rgba(0,0,0,0.02)]">
+                  <span className="mb-2">Chart: Word Cloud / Token Distribution</span>
                   <p className="text-xs uppercase tracking-widest">
-                    Matplotlib / Seaborn Output
+                    NLTK / SpaCy Output
                   </p>
                 </div>
 
                 {/* Checklist */}
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
                     <CheckCircle className="text-green-500" size={24} />
                     <span className="font-bold text-slate-700">
-                      Missing Values Handled
+                      Text Cleaning Done
                     </span>
                   </div>
 
                   <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
                     <CheckCircle className="text-green-500" size={24} />
                     <span className="font-bold text-slate-700">
-                      Correlation Analysis Done
+                      Vocabulary Size Analyzed
                     </span>
                   </div>
                 </div>
@@ -109,7 +90,44 @@ const Assignment1 = () => {
             </div>
           )}
 
-          {/* Bạn có thể copy block trên cho text/image */}
+          {activeTab === 'image' && (
+            <div className="animate-in fade-in duration-500 flex-grow flex flex-col">
+              <h2 className="text-3xl font-black mb-6 text-emerald-600">
+                Image Data Exploration
+              </h2>
+
+              <p className="text-slate-500 text-lg mb-10 leading-relaxed">
+                Phân tích dữ liệu hình ảnh, kiểm tra kích thước, số lượng kênh màu và phân phối pixel.
+              </p>
+
+              <div className="flex flex-col gap-8 flex-grow">
+                {/* Chart placeholder - Make it bigger */}
+                <div className="bg-slate-50 min-h-[800px] flex-grow rounded-[2rem] border border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 font-medium w-full text-xl shadow-[inset_0_0_50px_rgba(0,0,0,0.02)]">
+                  <span className="mb-2">Image Gallery: Class Samples</span>
+                  <p className="text-xs uppercase tracking-widest">
+                    OpenCV / PIL Output
+                  </p>
+                </div>
+
+                {/* Checklist */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                    <CheckCircle className="text-green-500" size={24} />
+                    <span className="font-bold text-slate-700">
+                      Image Resizing Handled
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                    <CheckCircle className="text-green-500" size={24} />
+                    <span className="font-bold text-slate-700">
+                      Pixel Distribution Checked
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </motion.div>
       </AnimatePresence>
     </div>
