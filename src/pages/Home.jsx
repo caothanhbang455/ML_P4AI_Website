@@ -21,13 +21,13 @@ const Home = () => (
           Programming for AI & Data Science (CO3135)
         </p>
 
-        <div className="mt-10 flex flex-wrap justify-center gap-4">
-          <span className="bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 text-sm font-semibold">
-            <GraduationCap size={18}/> Dr. Thanh-Sach LE
+        <div className="mt-10 flex flex-wrap justify-center items-center gap-4">
+          <span className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 text-sm font-semibold">
+            <GraduationCap size={18}/> Dr. Thanh-Sach Le
           </span>
 
-          <span className="bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 text-sm font-semibold">
-            Semester I 2025 - 2026
+          <span className="flex items-center bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 text-sm font-semibold">
+            Semester 1 • 2025 - 2026
           </span>
         </div>
       </div>
@@ -44,7 +44,7 @@ const Home = () => (
           className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-2xl hover:-translate-y-2 transition-all text-center group"
         >
           <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl mx-auto mb-6 flex items-center justify-center text-blue-600 font-bold text-2xl group-hover:scale-110 transition-transform">
-            {m.name.charAt(0)}
+            {m.name.split(' ').slice(-1)[0].charAt(0)}
           </div>
 
           <h3 className="font-bold text-xl mb-1">{m.name}</h3>
@@ -71,7 +71,7 @@ const Home = () => (
           </h2>
 
           <p className="text-slate-500 leading-relaxed">
-            Phân tích chuyên sâu 3 loại dữ liệu: Tabular, Text và Image nhằm chuẩn bị cho các bài toán AI/Data Science.
+            In-depth analysis of three data types: Tabular, Text, and Image to prepare for AI/Data Science tasks.
           </p>
         </div>
 
@@ -84,7 +84,7 @@ const Home = () => (
             to="/assignment-1"
             className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:scale-105 text-white px-10 py-4 rounded-2xl font-bold transition-all shadow-lg"
           >
-            Khám phá ngay →
+            Explore Now →
           </Link>
         </div>
       </div>
