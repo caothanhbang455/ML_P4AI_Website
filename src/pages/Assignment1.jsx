@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Type, ImageIcon, CheckCircle } from 'lucide-react';
+import { FileText, Type, ImageIcon, CheckCircle, Layers } from 'lucide-react';
 import TabularEDA from '../components/assignment1/TabularEDA';
+import MultimodalEDA from '../components/assignment1/MultimodalEDA';
 
 const Assignment1 = () => {
   const [activeTab, setActiveTab] = useState('tabular');
@@ -10,6 +11,7 @@ const Assignment1 = () => {
     { id: 'tabular', label: 'Tabular Data', icon: FileText },
     { id: 'text', label: 'Text Data', icon: Type },
     { id: 'image', label: 'Image Data', icon: ImageIcon },
+    { id: 'multimodal', label: 'Multimodal Data', icon: Layers },
   ];
 
   return (
@@ -49,6 +51,10 @@ const Assignment1 = () => {
         >
           {activeTab === 'tabular' && (
             <TabularEDA />
+          )}
+
+          {activeTab === 'multimodal' && (
+            <MultimodalEDA />
           )}
 
           {activeTab === 'text' && (
