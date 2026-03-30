@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, Type, ImageIcon, CheckCircle, Layers } from 'lucide-react';
 import TabularEDA from '../components/assignment1/TabularEDA';
 import MultimodalEDA from '../components/assignment1/MultimodalEDA';
+import TextEDA from '../components/assignment1/TextEDA'; 
 
 const Assignment1 = () => {
   const [activeTab, setActiveTab] = useState('tabular');
@@ -58,42 +59,7 @@ const Assignment1 = () => {
           )}
 
           {activeTab === 'text' && (
-            <div className="animate-in fade-in duration-500 flex-grow flex flex-col">
-              <h2 className="text-3xl font-black mb-6 text-indigo-600">
-                Text Data Exploration
-              </h2>
-
-              <p className="text-slate-500 text-lg mb-10 leading-relaxed">
-                Phân tích dữ liệu văn bản, làm sạch dữ liệu và trích xuất đặc trưng (TF-IDF, Word Embeddings).
-              </p>
-
-              <div className="flex flex-col gap-8 flex-grow">
-                {/* Chart placeholder - Make it bigger */}
-                <div className="bg-slate-50 min-h-[800px] flex-grow rounded-[2rem] border border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 font-medium w-full text-xl shadow-[inset_0_0_50px_rgba(0,0,0,0.02)]">
-                  <span className="mb-2">Chart: Word Cloud / Token Distribution</span>
-                  <p className="text-xs uppercase tracking-widest">
-                    NLTK / SpaCy Output
-                  </p>
-                </div>
-
-                {/* Checklist */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                    <CheckCircle className="text-green-500" size={24} />
-                    <span className="font-bold text-slate-700">
-                      Text Cleaning Done
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                    <CheckCircle className="text-green-500" size={24} />
-                    <span className="font-bold text-slate-700">
-                      Vocabulary Size Analyzed
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <TextEDA />
           )}
 
           {activeTab === 'image' && (
