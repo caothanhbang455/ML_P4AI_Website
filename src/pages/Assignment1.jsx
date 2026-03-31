@@ -1,18 +1,19 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Type, ImageIcon, CheckCircle, Layers } from 'lucide-react';
-import TabularEDA from '../components/assignment1/TabularEDA';
-import MultimodalEDA from '../components/assignment1/MultimodalEDA';
-import TextEDA from '../components/assignment1/TextEDA'; 
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FileText, Type, ImageIcon, CheckCircle, Layers } from "lucide-react";
+import TabularEDA from "../components/assignment1/TabularEDA";
+import MultimodalEDA from "../components/assignment1/MultimodalEDA";
+import TextEDA from "../components/assignment1/TextEDA";
+import ImageEDA from "../components/assignment1/ImageEDA";
 
 const Assignment1 = () => {
-  const [activeTab, setActiveTab] = useState('tabular');
+  const [activeTab, setActiveTab] = useState("tabular");
 
   const tabs = [
-    { id: 'tabular', label: 'Tabular Data', icon: FileText },
-    { id: 'text', label: 'Text Data', icon: Type },
-    { id: 'image', label: 'Image Data', icon: ImageIcon },
-    { id: 'multimodal', label: 'Multimodal Data', icon: Layers },
+    { id: "tabular", label: "Tabular Data", icon: FileText },
+    { id: "text", label: "Text Data", icon: Type },
+    { id: "image", label: "Image Data", icon: ImageIcon },
+    { id: "multimodal", label: "Multimodal Data", icon: Layers },
   ];
 
   return (
@@ -32,8 +33,8 @@ const Assignment1 = () => {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-bold transition-all ${
               activeTab === tab.id
-                ? 'bg-blue-600 text-white shadow-xl shadow-blue-100'
-                : 'bg-white text-slate-500 hover:bg-white/80 border border-slate-100'
+                ? "bg-blue-600 text-white shadow-xl shadow-blue-100"
+                : "bg-white text-slate-500 hover:bg-white/80 border border-slate-100"
             }`}
           >
             <tab.icon size={22} /> {tab.label}
@@ -50,56 +51,13 @@ const Assignment1 = () => {
           exit={{ opacity: 0, y: -10 }}
           className="bg-white p-8 md:p-12 rounded-[3rem] shadow-sm border border-slate-100 min-h-[1200px] flex flex-col"
         >
-          {activeTab === 'tabular' && (
-            <TabularEDA />
-          )}
+          {activeTab === "tabular" && <TabularEDA />}
 
-          {activeTab === 'multimodal' && (
-            <MultimodalEDA />
-          )}
+          {activeTab === "multimodal" && <MultimodalEDA />}
 
-          {activeTab === 'text' && (
-            <TextEDA />
-          )}
+          {activeTab === "text" && <TextEDA />}
 
-          {activeTab === 'image' && (
-            <div className="animate-in fade-in duration-500 flex-grow flex flex-col">
-              <h2 className="text-3xl font-black mb-6 text-emerald-600">
-                Image Data Exploration
-              </h2>
-
-              <p className="text-slate-500 text-lg mb-10 leading-relaxed">
-                Phân tích dữ liệu hình ảnh, kiểm tra kích thước, số lượng kênh màu và phân phối pixel.
-              </p>
-
-              <div className="flex flex-col gap-8 flex-grow">
-                {/* Chart placeholder - Make it bigger */}
-                <div className="bg-slate-50 min-h-[800px] flex-grow rounded-[2rem] border border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 font-medium w-full text-xl shadow-[inset_0_0_50px_rgba(0,0,0,0.02)]">
-                  <span className="mb-2">Image Gallery: Class Samples</span>
-                  <p className="text-xs uppercase tracking-widest">
-                    OpenCV / PIL Output
-                  </p>
-                </div>
-
-                {/* Checklist */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                    <CheckCircle className="text-green-500" size={24} />
-                    <span className="font-bold text-slate-700">
-                      Image Resizing Handled
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                    <CheckCircle className="text-green-500" size={24} />
-                    <span className="font-bold text-slate-700">
-                      Pixel Distribution Checked
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          {activeTab === "image" && <ImageEDA />}
         </motion.div>
       </AnimatePresence>
     </div>
