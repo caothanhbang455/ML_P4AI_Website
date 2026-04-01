@@ -119,7 +119,7 @@ const TabularEDA = () => {
                     Tabular Data Exploration
                 </h2>
                 <p className="text-slate-500 text-lg leading-relaxed">
-                    Phân tích chi tiết tập dữ liệu dạng bảng <strong>Titanic</strong>, từ việc khảo sát thông tin tổng quan, xử lý dữ liệu bị thiếu đến phân tích chuyên sâu các đặc trưng số và phân loại.
+                    Detailed analysis of the <strong>Titanic</strong> tabular dataset, from exploring the general overview and handling missing data to in-depth analysis of numerical and categorical features.
                 </p>
             </div>
 
