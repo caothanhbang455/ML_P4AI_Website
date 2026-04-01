@@ -17,6 +17,8 @@ import extremeImg from '../../assets/eda-multimodal/extreme_images.png';
 import blurryImg from '../../assets/eda-multimodal/top5_blurry_images.png';
 import distImg from '../../assets/eda-multimodal/width_height_distribution.png';
 import sample1Img from '../../assets/eda-multimodal/sample1.png';
+import sample2Img from '../../assets/eda-multimodal/sample2.jpg';
+import sample3Img from '../../assets/eda-multimodal/sample3.jpg';
 
 const MultimodalEDA = () => {
     const datasetSamples = [
@@ -143,15 +145,15 @@ const MultimodalEDA = () => {
                     </div>
                 </div>
 
-                {/* Single Image with 5 Captions */}
+                {/* Images & Captions Example */}
                 <div className="bg-white border text-left border-slate-200 rounded-2xl shadow-sm overflow-hidden mt-4">
                     <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center justify-between">
                         <h4 className="font-bold text-slate-700">Image & Captions Example</h4>
-                        <span className="bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full">1 Image, 5 Captions</span>
+                        <span className="bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full">Examples</span>
                     </div>
-                    <div className="p-6 flex flex-col md:flex-row gap-8 items-center md:items-start">
+                    <div className="p-6 flex flex-col md:flex-row gap-8 items-center md:items-start border-b border-slate-100">
                         <div className="w-full md:w-1/2 flex justify-center">
-                            <img src={sample1Img} alt="Sample Data" className="w-full max-w-sm rounded-xl object-contain hover:scale-[1.01] transition-transform" />
+                            <img src={sample1Img} alt="Sample Data 1" className="w-full max-w-sm rounded-xl object-contain hover:scale-[1.01] transition-transform" />
                         </div>
                         <div className="w-full md:w-1/2 flex flex-col gap-3 justify-center h-full">
                             <h5 className="font-bold text-slate-600 text-sm uppercase tracking-wider mb-2">Detailed Captions</h5>
@@ -162,6 +164,54 @@ const MultimodalEDA = () => {
                                     'a surfer falling of his board into a wave',
                                     'A man falling over in an ocean wave',
                                     'A man is falling into waves .'
+                                ].map((cap, idx) => (
+                                    <li key={idx} className="flex gap-3 items-start bg-slate-50 p-3 rounded-lg border border-slate-100 hover:bg-purple-50 transition-colors">
+                                        <div className="bg-purple-100 text-purple-700 text-xs font-black min-w-\[24px\] min-h-\[24px\] w-6 h-6 flex items-center justify-center rounded-full mt-0.5 shadow-sm">
+                                            {idx + 1}
+                                        </div>
+                                        <p className="text-slate-700 italic leading-snug">"{cap}"</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="p-6 flex flex-col md:flex-row gap-8 items-center md:items-start border-b border-slate-100">
+                        <div className="w-full md:w-1/2 flex justify-center">
+                            <img src={sample2Img} alt="Sample Data 2" className="w-full max-w-sm rounded-xl object-contain hover:scale-[1.01] transition-transform" />
+                        </div>
+                        <div className="w-full md:w-1/2 flex flex-col gap-3 justify-center h-full">
+                            <h5 className="font-bold text-slate-600 text-sm uppercase tracking-wider mb-2">Detailed Captions</h5>
+                            <ul className="space-y-3">
+                                {[
+                                    'Two young guys with shaggy hair look at their hands while hanging out in the yard.',
+                                    'Two young white males are outside near many bushes .',
+                                    'Two men in green shirts are standing in a yard.',
+                                    'A man in a blue shirt standing in a garden.',
+                                    'Two friends enjoy time spent together.'
+                                ].map((cap, idx) => (
+                                    <li key={idx} className="flex gap-3 items-start bg-slate-50 p-3 rounded-lg border border-slate-100 hover:bg-purple-50 transition-colors">
+                                        <div className="bg-purple-100 text-purple-700 text-xs font-black min-w-\[24px\] min-h-\[24px\] w-6 h-6 flex items-center justify-center rounded-full mt-0.5 shadow-sm">
+                                            {idx + 1}
+                                        </div>
+                                        <p className="text-slate-700 italic leading-snug">"{cap}"</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="p-6 flex flex-col md:flex-row gap-8 items-center md:items-start">
+                        <div className="w-full md:w-1/2 flex justify-center">
+                            <img src={sample3Img} alt="Sample Data 3" className="w-full max-w-sm rounded-xl object-contain hover:scale-[1.01] transition-transform" />
+                        </div>
+                        <div className="w-full md:w-1/2 flex flex-col gap-3 justify-center h-full">
+                            <h5 className="font-bold text-slate-600 text-sm uppercase tracking-wider mb-2">Detailed Captions</h5>
+                            <ul className="space-y-3">
+                                {[
+                                    'A child in a pink dress is climbing up a set of stairs in an entry way.',
+                                    'A little girl in a pink dress going into a wooden cabin.',
+                                    'A little girl climbing the stairs to her playhouse.',
+                                    'A little girl climbing into a wooden playhouse.',
+                                    'A girl going into a wooden building.'
                                 ].map((cap, idx) => (
                                     <li key={idx} className="flex gap-3 items-start bg-slate-50 p-3 rounded-lg border border-slate-100 hover:bg-purple-50 transition-colors">
                                         <div className="bg-purple-100 text-purple-700 text-xs font-black min-w-\[24px\] min-h-\[24px\] w-6 h-6 flex items-center justify-center rounded-full mt-0.5 shadow-sm">
