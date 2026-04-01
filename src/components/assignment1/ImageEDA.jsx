@@ -18,6 +18,7 @@ import rgbDistrinution from "../../assets/eda-image/eda-image_rgb-distribution.p
 import featureVariance from "../../assets/eda-image/eda-feature-variance.png";
 import correlationMatrix from "../../assets/eda-image/eda-feature-correlation.png";
 import sampleGrid from "../../assets/eda-image/sample_grid.png";
+import brightbessImage from "../../assets/eda-image/eda-image_brightness.png";
 
 const ImageEDA = () => {
   return (
@@ -226,6 +227,19 @@ const ImageEDA = () => {
               />
             </div>
           </div>
+
+          <div className="bg-white p-6 border border-slate-200 rounded-2xl shadow-sm flex flex-col items-center hover:shadow-md transition-shadow">
+            <h4 className="font-bold text-slate-700 mb-2 text-xl w-full text-center border-b border-slate-100 pb-2">
+              Brightness Diverity Across All Classes
+            </h4>
+            <div className="flex justify-center w-full">
+              <img
+                src={brightbessImage}
+                alt="Length Distribution"
+                className="w-full h-auto max-w-4xl rounded-xl object-contain hover:scale-[1.01] transition-transform"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Insights */}
@@ -234,42 +248,48 @@ const ImageEDA = () => {
             <AlertTriangle size={20} /> Key Insights
           </h4>
           <ul className="list-disc ml-5 mt-3 text-amber-800">
+            
             <li>
-              The dataset shows{" "}
-              <strong>no missing, corrupted, or duplicate images</strong>,
-              indicating high data integrity and consistency.
+              The dataset contains <strong>no missing, corrupted, or duplicate images</strong>, 
+              indicating strong data integrity and consistency.
             </li>
 
             <li>
-              However,{" "}
-              <strong>blurry images are present across multiple classes</strong>
-              , as indicated by low Laplacian variance scores.
+              <strong>Blurry images are present across all classes</strong>, with low Laplacian 
+              variance scores, which may reduce the model’s ability to capture fine-grained features.
             </li>
 
             <li>
-              Some classes (e.g., <code>1_Subol_Lota</code>,{" "}
-              <code>4_Shampakatari</code>) contain{" "}
-              <strong>very low sharpness samples</strong>, which may introduce
-              noise during training.
+              Some classes include <strong>extremely low-sharpness samples</strong>, suggesting 
+              potential noise that could negatively affect training performance.
             </li>
 
             <li>
-              Blurry images can negatively impact feature extraction, especially
-              for <strong>fine-grained classification tasks</strong> like rice
-              type recognition.
+              The blur issue appears <strong>systematic rather than class-specific</strong>, 
+              meaning it affects the entire dataset distribution.
             </li>
 
             <li>
-              The presence of blur across all classes suggests this is a{" "}
-              <strong>systematic data issue</strong> rather than class-specific
-              bias.
+              There is a <strong>significant variation in image brightness</strong> across samples 
+              and classes, ranging from very dark to highly illuminated images.
             </li>
 
             <li>
-              <strong>Recommended action:</strong> Apply image quality filtering
-              or augmentation (e.g., sharpening, contrast enhancement) to
-              improve model robustness.
+              Brightness inconsistency may lead to <strong>unstable feature extraction</strong> 
+              and reduce model generalization if not properly normalized.
             </li>
+
+            <li>
+              Some samples show <strong>overexposure or underexposure</strong>, which can obscure 
+              important visual details of rice grains.
+            </li>
+
+            <li>
+              <strong>Recommended actions:</strong> Apply preprocessing techniques such as 
+              image normalization, brightness adjustment, contrast enhancement, and optional 
+              blur filtering to improve overall data quality and model robustness.
+            </li>
+
           </ul>
         </div>
       </section>
