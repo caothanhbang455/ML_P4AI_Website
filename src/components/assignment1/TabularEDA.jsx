@@ -2,12 +2,14 @@ import React from 'react';
 import { Users, LayoutList, Hash, Target, Info, Database, AlertTriangle, BarChart2, PieChart, Network, Crosshair, Activity, Lightbulb } from 'lucide-react';
 import missingValuesImg from '../../assets/eda-tabular/tabular-missing-values.png';
 import duplicateValuesImg from '../../assets/eda-tabular/tabular-duplicate-values.png';
-import pclassDistImg from '../../assets/eda-tabular/tabular_pclass_distribution.png';
 import ageDistImg from '../../assets/eda-tabular/tabular_age_distribution.png';
 import sibspDistImg from '../../assets/eda-tabular/tabular_sibsp_distribution.png';
 import parchDistImg from '../../assets/eda-tabular/tabular_parch_distribution.png';
 import fareDistImg from '../../assets/eda-tabular/tabular_fare_distribution.png';
-import categoricalDistImg from '../../assets/eda-tabular/tabular_categorical_distribution.png';
+import pclassDistImg from '../../assets/eda-tabular/tabular_pclass_distribution.png';
+import sexDistImg from '../../assets/eda-tabular/tabular_sex_distribution.png';
+import cabinDistImg from '../../assets/eda-tabular/tabuluar_cabin_distribution.png';
+import embarkedDistImg from '../../assets/eda-tabular/tabular_embarked_distribution.png';
 import ticketPrefixDistImg from '../../assets/eda-tabular/tabular_ticketprefix_distribution.png';
 import correlationHeatmapImg from '../../assets/eda-tabular/tabular_correlation_heatmap.png';
 import targetDistImg from '../../assets/eda-tabular/tabular_target_distribution.png';
@@ -20,7 +22,6 @@ import kurtosisImg from '../../assets/eda-tabular/tabular_kurtosis.png';
 
 const TabularEDA = () => {
     const numericalStats = [
-        { feature: 'Pclass', count: 891, mean: '2.31', median: '3.00', std: '0.84', min: '1.00', max: '3.00' },
         { feature: 'Age', count: 714, mean: '29.70', median: '28.00', std: '14.53', min: '0.42', max: '80.00' },
         { feature: 'SibSp', count: 891, mean: '0.52', median: '0.00', std: '1.10', min: '0.00', max: '8.00' },
         { feature: 'Parch', count: 891, mean: '0.38', median: '0.00', std: '0.81', min: '0.00', max: '6.00' },
@@ -28,7 +29,6 @@ const TabularEDA = () => {
     ];
 
     const outlierStats = [
-        { feature: 'Pclass', lower: '0.50', upper: '4.50', q1: '2.00', q3: '3.00', iqr: '1.00', skewness: '-0.63', kurtosis: '-1.28', count: 0, percent: '0.00', severity: '🟢 Low' },
         { feature: 'Age', lower: '-6.69', upper: '64.81', q1: '20.12', q3: '38.00', iqr: '17.88', skewness: '0.39', kurtosis: '0.18', count: 11, percent: '1.54', severity: '🟡 Medium' },
         { feature: 'SibSp', lower: '-1.50', upper: '2.50', q1: '0.00', q3: '1.00', iqr: '1.00', skewness: '3.70', kurtosis: '17.88', count: 46, percent: '5.16', severity: '🔴 High' },
         { feature: 'Parch', lower: '0.00', upper: '0.00', q1: '0.00', q3: '0.00', iqr: '0.00', skewness: '2.75', kurtosis: '9.78', count: 213, percent: '23.91', severity: '🔴 High' },
@@ -62,6 +62,7 @@ const TabularEDA = () => {
         { feature: 'Ticket', unique: 681, cardinality: '🔴 High (ID-like)', mode: '1601', modeFreq: 7, modePercent: '0.79', missingPercent: '0.00' },
         { feature: 'Cabin', unique: 147, cardinality: '🟠 Medium', mode: 'B96 B98', modeFreq: 4, modePercent: '1.96', missingPercent: '77.10' },
         { feature: 'Embarked', unique: 3, cardinality: '🟡 Low', mode: 'S', modeFreq: 644, modePercent: '72.44', missingPercent: '0.22' },
+        { feature: 'Pclass', unique: 3, cardinality: '🟡 Low', mode: '3', modeFreq: 491, modePercent: '55.11', missingPercent: '0.00' },
     ];
 
     const missingData = [
@@ -490,10 +491,6 @@ const TabularEDA = () => {
                 {/* Distribution Visualizations */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
                     <div className="bg-white p-6 border border-slate-200 rounded-2xl shadow-sm flex flex-col items-center hover:shadow-md transition-shadow">
-                        <h5 className="font-bold text-slate-700 mb-4 w-full text-center text-lg border-b border-slate-100 pb-2">Pclass Distribution</h5>
-                        <img src={pclassDistImg} alt="Pclass Distribution" className="w-full h-auto rounded-xl object-contain hover:scale-[1.02] transition-transform" />
-                    </div>
-                    <div className="bg-white p-6 border border-slate-200 rounded-2xl shadow-sm flex flex-col items-center hover:shadow-md transition-shadow">
                         <h5 className="font-bold text-slate-700 mb-4 w-full text-center text-lg border-b border-slate-100 pb-2">Age Distribution</h5>
                         <img src={ageDistImg} alt="Age Distribution" className="w-full h-auto rounded-xl object-contain hover:scale-[1.02] transition-transform" />
                     </div>
@@ -565,11 +562,24 @@ const TabularEDA = () => {
                         <div className="bg-purple-50 rounded-2xl p-6 border border-purple-100 shadow-sm">
                             <h4 className="text-xl font-bold text-purple-900 mb-2">Non-ID Categorical Distribution</h4>
                             <p className="text-purple-700/80 leading-relaxed">
-                                Variables such as <strong className="text-purple-900">Name</strong> and <strong className="text-purple-900">Ticket</strong> have extremely high cardinality mapping closely to unique IDs. Therefore, they are excluded from frequency analysis in favor of true categorical classifications: <strong className="text-purple-900">Sex, Cabin, and Embarked</strong>.
+                                Variables such as <strong className="text-purple-900">Name</strong> and <strong className="text-purple-900">Ticket</strong> have extremely high cardinality mapping closely to unique IDs. Therefore, they are excluded from frequency analysis in favor of true categorical classifications: <strong className="text-purple-900">Pclass, Sex, Cabin, and Embarked</strong>.
                             </p>
                         </div>
-                        <div className="bg-white p-4 border border-slate-200 rounded-2xl shadow-sm flex flex-col items-center hover:shadow-md transition-shadow w-full">
-                            <img src={categoricalDistImg} alt="Categorical Distribution" className="w-full h-auto max-h-[800px] rounded-xl object-contain hover:scale-[1.01] transition-transform" />
+                        <div className="bg-white p-6 border border-slate-200 rounded-2xl shadow-sm flex flex-col items-center hover:shadow-md transition-shadow w-full">
+                            <h5 className="font-bold text-slate-700 mb-4 w-full text-center text-lg border-b border-slate-100 pb-2">Pclass Distribution</h5>
+                            <img src={pclassDistImg} alt="Pclass Distribution" className="w-full max-w-xl h-auto rounded-xl object-contain hover:scale-[1.01] transition-transform" />
+                        </div>
+                        <div className="bg-white p-6 border border-slate-200 rounded-2xl shadow-sm flex flex-col items-center hover:shadow-md transition-shadow w-full">
+                            <h5 className="font-bold text-slate-700 mb-4 w-full text-center text-lg border-b border-slate-100 pb-2">Sex Distribution</h5>
+                            <img src={sexDistImg} alt="Sex Distribution" className="w-full max-w-xl h-auto rounded-xl object-contain hover:scale-[1.01] transition-transform" />
+                        </div>
+                        <div className="bg-white p-6 border border-slate-200 rounded-2xl shadow-sm flex flex-col items-center hover:shadow-md transition-shadow w-full">
+                            <h5 className="font-bold text-slate-700 mb-4 w-full text-center text-lg border-b border-slate-100 pb-2">Cabin Distribution</h5>
+                            <img src={cabinDistImg} alt="Cabin Distribution" className="w-full max-w-xl h-auto rounded-xl object-contain hover:scale-[1.01] transition-transform" />
+                        </div>
+                        <div className="bg-white p-6 border border-slate-200 rounded-2xl shadow-sm flex flex-col items-center hover:shadow-md transition-shadow w-full">
+                            <h5 className="font-bold text-slate-700 mb-4 w-full text-center text-lg border-b border-slate-100 pb-2">Embarked Distribution</h5>
+                            <img src={embarkedDistImg} alt="Embarked Distribution" className="w-full max-w-xl h-auto rounded-xl object-contain hover:scale-[1.01] transition-transform" />
                         </div>
                     </div>
 
