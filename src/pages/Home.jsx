@@ -31,30 +31,18 @@ const Home = () => (
           </span>
         </div>
 
-        {/* BUTTONS */}
-        <div className="mt-10 flex flex-wrap justify-center gap-4">
-          
-          {/* GitHub */}
+        {/* 🔥 SOURCE CODE BUTTON */}
+        <div className="mt-10 flex justify-center">
           <a
             href="https://github.com/caothanhbang455/ML_P4AI_Website"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-white text-black px-6 py-3 rounded-xl font-semibold hover:scale-105 transition-all shadow-lg"
+            className="bg-white text-black px-8 py-3 rounded-xl font-semibold hover:scale-105 transition-all shadow-lg"
           >
             Source Code
           </a>
-
-          {/* YouTube */}
-          <a
-            href="https://www.youtube.com/watch?v=0TE0Cu69H10&t=77s"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-red-500 text-white px-6 py-3 rounded-xl font-semibold hover:scale-105 transition-all shadow-lg"
-          >
-            Demo Video
-          </a>
-
         </div>
+
       </div>
     </motion.section>
 
