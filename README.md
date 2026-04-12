@@ -1,9 +1,4 @@
 # 📊 Exploratory Data Analysis for Multi-Modal Data  
-**Course:** Programming for Artificial Intelligence and Data Science (P4AI-DS) – CO3135  
-**Institution:** Ho Chi Minh City University of Technology (HCMUT), VNU-HCM  
-**Instructor:** Dr. Thanh-Sach Le  
-**Semester:** Fall 2025–2026  
-
 ---
 
 ## 📌 Overview
