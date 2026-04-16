@@ -70,8 +70,8 @@ const Home = () => (
       ))}
     </div>
 
-    {/* ASSIGNMENT CARD */}
-    <section className="bg-white p-12 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all">
+    {/* ASSIGNMENT CARD 1 */}
+    <section className="bg-white p-12 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all mb-8">
       <div className="flex flex-col md:flex-row justify-between items-center gap-10">
         
         <div className="max-w-xl">
@@ -95,6 +95,39 @@ const Home = () => (
 
           <Link
             to="/assignment-1"
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:scale-105 text-white px-10 py-4 rounded-2xl font-bold transition-all shadow-lg"
+          >
+            Explore Now →
+          </Link>
+        </div>
+      </div>
+    </section>
+
+    {/* ASSIGNMENT CARD 2 */}
+    <section className="bg-white p-12 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-10">
+        
+        <div className="max-w-xl">
+          <div className="flex items-center gap-2 text-blue-600 font-bold uppercase tracking-widest text-sm mb-4">
+            <BookOpen size={20}/> Assignment 2
+          </div>
+
+          <h2 className="text-3xl font-black mb-4">
+            Classification Models
+          </h2>
+
+          <p className="text-slate-500 leading-relaxed">
+            Implementing machine learning algorithms and classification models for Tabular, Text, Image, and Multimodal datasets.
+          </p>
+        </div>
+
+        <div className="text-center md:text-right shrink-0">
+          <div className="flex items-center gap-2 text-red-500 font-bold mb-6 justify-center md:justify-end">
+            <Calendar size={20}/> Deadline: 23:59, 17/04/2026
+          </div>
+
+          <Link
+            to="/assignment-2"
             className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:scale-105 text-white px-10 py-4 rounded-2xl font-bold transition-all shadow-lg"
           >
             Explore Now →

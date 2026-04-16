@@ -12,6 +12,7 @@ const Navbar = () => (
       <div className="flex gap-8 font-medium text-slate-600 text-sm">
         <Link to="/" className="hover:text-blue-600 transition-colors">Home</Link>
         <Link to="/assignment-1" className="hover:text-blue-600 transition-colors">Assignment 1</Link>
+        <Link to="/assignment-2" className="hover:text-blue-600 transition-colors">Assignment 2</Link>
       </div>
 
     </div>

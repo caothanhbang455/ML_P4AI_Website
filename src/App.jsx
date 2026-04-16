@@ -3,6 +3,7 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Home from './pages/Home';
 import Assignment1 from './pages/Assignment1';
+import Assignment2 from './pages/Assignment2';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/assignment-1" element={<Assignment1 />} />
+            <Route path="/assignment-2" element={<Assignment2 />} />
           </Routes>
         </main>
 
