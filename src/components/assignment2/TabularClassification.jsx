@@ -1,7 +1,41 @@
-import React from 'react';
-import { Target, Cpu, Database, Settings, Brain, ArrowRight, CheckCircle2, Activity, BarChart2, Trophy, Timer } from 'lucide-react';
+import React, { useState } from 'react';
+import { Target, Cpu, Database, Settings, Brain, ArrowRight, CheckCircle2, Activity, BarChart2, Trophy, Timer, ImageIcon, X, ZoomIn } from 'lucide-react';
+
+import distributionBySurvivalRatePlot from '../../assets/classification-tabular/distribution_by_survivalrate.png';
+import distributionByTargetPlot from '../../assets/classification-tabular/distribution_by_target.png';
 
 const TabularClassification = () => {
+    const [zoomedImg, setZoomedImg] = useState(null);
+    const [selectedModels, setSelectedModels] = useState([]);
+    const [showComparison, setShowComparison] = useState(false);
+
+    const toggleModel = (modelName) => {
+        if (selectedModels.includes(modelName)) {
+            setSelectedModels(selectedModels.filter(m => m !== modelName));
+        } else {
+            setSelectedModels([...selectedModels, modelName]);
+        }
+    };
+    
+    const handleCompare = () => {
+        if (selectedModels.length > 0) {
+            setShowComparison(true);
+            setTimeout(() => {
+                document.getElementById('comparison-section')?.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+    };
+
+    const modelDetails = {
+        'SVM': { f1_0: 0.8957, f1_1: 0.8381, cm: [[73, 9], [8, 44]] },
+        'Logistic Regression': { f1_0: 0.8848, f1_1: 0.8155, cm: [[73, 9], [10, 42]] },
+        'Gradient Boosting': { f1_0: 0.8736, f1_1: 0.7660, cm: [[76, 6], [16, 36]] },
+        'AdaBoost': { f1_0: 0.8834, f1_1: 0.8190, cm: [[72, 10], [9, 43]] },
+        'MLP': { f1_0: 0.8810, f1_1: 0.8000, cm: [[74, 8], [12, 40]] },
+        'Random Forest': { f1_0: 0.8503, f1_1: 0.7525, cm: [[71, 11], [14, 38]] },
+        'Naive Bayes': { f1_0: 0.7931, f1_1: 0.6170, cm: [[69, 13], [23, 29]] },
+        'Decision Tree': { f1_0: 0.7950, f1_1: 0.6916, cm: [[64, 18], [15, 37]] }
+    };
 
     const baselineResults = [
         { model: 'SVM',                stage: 'Baseline', accuracy: 0.8731, precision: 0.8302, recall: 0.8462, f1: 0.8381, roc_auc: 0.9109, training_time: 0.2257 },
@@ -76,6 +110,102 @@ const TabularClassification = () => {
             accuracy: 0.8507, roc_auc: 0.8663, best: false,
             Icon: Brain, iconBg: 'bg-purple-50', iconColor: 'text-purple-500',
         },
+    ];
+
+    const preprocessingSteps = [
+        {
+            feature: 'Pclass',
+            cleaning: [
+                { text: 'Starts as numeric, converted to string for sklearn', before: '[1, 2, 3]', after: "['1', '2', '3']" }
+            ],
+            preprocessing: [
+                { text: 'Most-frequent imputation', before: 'NaN', after: "'3'" },
+                { text: 'One-hot encoding', before: "['1']", after: '[1, 0, 0]' }
+            ]
+        },
+        {
+            feature: 'Sex',
+            cleaning: [
+                { text: 'Map text to binary', before: "['male', 'female']", after: '[0, 1]' }
+            ],
+            preprocessing: [
+                { text: 'Passed through unchanged (binary)', before: '[0, 1]', after: '[0, 1]' }
+            ]
+        },
+        {
+            feature: 'Age',
+            cleaning: [
+                { text: 'Missing values filled using median (by Pclass or global)', before: '[22, NaN, 35]', after: '[22, 26, 35]' }
+            ],
+            preprocessing: [
+                { text: 'Standardize / Scale (StandardScaler or MinMaxScaler)', before: '[22.0, 35.0]', after: '[-0.53, 1.12]' }
+            ]
+        },
+        {
+            feature: 'SibSp',
+            cleaning: [
+                { text: 'No cleaning logic (stays numeric)', before: '[0, 1, 3]', after: '[0, 1, 3]' }
+            ],
+            preprocessing: [
+                { text: 'Median imputation & Scaling', before: '[0, 1, 3]', after: '[-0.47, 2.23]' }
+            ]
+        },
+        {
+            feature: 'Parch',
+            cleaning: [
+                { text: 'No cleaning logic (stays numeric)', before: '[0, 1, 2]', after: '[0, 1, 2]' }
+            ],
+            preprocessing: [
+                { text: 'Median imputation & Scaling', before: '[0, 1, 2]', after: '[-0.47, 2.00]' }
+            ]
+        },
+        {
+            feature: 'Fare',
+            cleaning: [
+                { text: 'Negative values clipped to 0, applied log1p', before: '[-5.0, 8.0]', after: '[0.0, 2.19]' }
+            ],
+            preprocessing: [
+                { text: 'Median imputation & Scaling', before: '[0.0, 2.19]', after: '[-0.50, 1.23]' }
+            ]
+        },
+        {
+            feature: 'Embarked',
+            cleaning: [
+                { text: 'Filled missing with mode, cast to string', before: "['S', NaN]", after: "['S', 'S']" }
+            ],
+            preprocessing: [
+                { text: 'Most-frequent imputation', before: 'NaN', after: "'S'" },
+                { text: 'One-hot encoding', before: "'S'", after: '[0, 0, 1]' }
+            ]
+        },
+        {
+            feature: 'Deck',
+            cleaning: [
+                { text: "Engineered from Cabin, missing filled with 'Unknown'", before: "['C85', NaN]", after: "['C', 'Unknown']" }
+            ],
+            preprocessing: [
+                { text: 'Most-frequent imputation', before: 'NaN', after: "'Unknown'" },
+                { text: 'One-hot encoding', before: "'C'", after: '[0, 0, 1, 0, ...]' }
+            ]
+        },
+        {
+            feature: 'FamilySize',
+            cleaning: [
+                { text: 'Engineered: SibSp + Parch + 1', before: 'SibSp:1, Parch:0', after: '2' }
+            ],
+            preprocessing: [
+                { text: 'Median imputation & Scaling', before: '[2, 4]', after: '[0.05, 1.45]' }
+            ]
+        },
+        {
+            feature: 'IsAlone',
+            cleaning: [
+                { text: 'Engineered: FamilySize == 1', before: 'FamilySize: 2', after: '0 (False)' }
+            ],
+            preprocessing: [
+                { text: 'Passed through unchanged (binary)', before: '[1, 0]', after: '[1, 0]' }
+            ]
+        }
     ];
 
     return (
@@ -204,6 +334,176 @@ const TabularClassification = () => {
                 </div>
             </section>
 
+            {/* Section: Data Preprocessing & Feature Engineering */}
+            <section className="flex flex-col gap-8 mt-4">
+                <div className="border-b border-slate-200 pb-4">
+                    <h3 className="text-2xl font-bold flex items-center gap-3 text-slate-800">
+                        <div className="bg-amber-100 p-2 rounded-xl">
+                            <Settings className="text-amber-600" size={24} />
+                        </div>
+                        Data Preprocessing & Feature Engineering
+                    </h3>
+                    <p className="text-slate-500 mt-2 text-base">
+                        Detailed breakdown of cleaning and preprocessing steps applied to each feature before model training.
+                    </p>
+                </div>
+
+                <div className="flex flex-col gap-6">
+                    {preprocessingSteps.map((step, idx) => (
+                        <div key={idx} className="bg-white border border-slate-200 rounded-[1.5rem] p-6 lg:p-8 shadow-sm flex flex-col lg:flex-row gap-8 relative group hover:border-indigo-200 transition-colors">
+                            {/* Feature Name */}
+                            <h4 className="font-extrabold text-slate-800 text-xl lg:w-48 lg:border-r lg:border-slate-100 lg:pr-6 flex lg:flex-col lg:justify-center items-center lg:items-start gap-4">
+                                <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 text-slate-500 group-hover:bg-indigo-50 group-hover:text-indigo-600 group-hover:border-indigo-200 group-hover:shadow-sm transition-all duration-300">
+                                    <Database size={24} />
+                                </div>
+                                <span className="tracking-tight text-2xl lg:text-xl">{step.feature}</span>
+                            </h4>
+                            
+                            <div className="flex-1 flex flex-col md:flex-row items-stretch gap-6 lg:gap-4 relative z-10 pt-2 lg:pt-0">
+                                {/* Node 1: Cleaning State */}
+                                <div className="flex-1 bg-amber-50 hover:bg-amber-50/80 hover:-translate-y-1 hover:shadow-md hover:shadow-amber-100/50 border border-amber-200 hover:border-amber-400 rounded-3xl p-6 relative flex flex-col justify-center transition-all duration-300">
+                                    <div className="absolute -top-3.5 left-6 px-3.5 py-1 bg-white border-2 border-amber-200 rounded-full text-[10px] sm:text-xs font-black text-amber-600 uppercase tracking-wider shadow-sm flex items-center gap-1.5">
+                                        <Activity size={14} strokeWidth={3} /> Cleaning
+                                    </div>
+                                    <ul className="flex flex-col gap-3 mt-4 w-full">
+                                        {step.cleaning.map((item, i) => (
+                                            <li key={i} className="flex flex-col gap-2.5">
+                                                <div className="flex gap-2.5 items-start px-1">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 mt-2 shadow-sm"></div>
+                                                    <span className="leading-relaxed font-medium text-sm text-slate-700">{item.text}</span>
+                                                </div>
+                                                {item.before && item.after && (
+                                                    <div className="flex items-center gap-2 pl-4">
+                                                        <div className="bg-white/80 border border-amber-200/50 rounded-xl p-1.5 flex flex-wrap items-center gap-2 shadow-sm">
+                                                            <span className="font-mono text-[10px] sm:text-[11px] bg-slate-100/80 text-slate-500 px-2.5 py-1 rounded-lg border border-slate-200/50">{item.before}</span>
+                                                            <ArrowRight size={12} className="text-amber-300" strokeWidth={3} />
+                                                            <span className="font-mono text-[10px] sm:text-[11px] bg-amber-100/50 text-amber-700 font-bold px-2.5 py-1 rounded-lg border border-amber-200/50">{item.after}</span>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                
+                                <div className="hidden md:flex shrink-0 items-center justify-center -mx-2 z-20">
+                                    <div className="bg-white rounded-full p-1.5 shadow-sm border border-slate-200 text-slate-300 group-hover:text-indigo-400 group-hover:border-indigo-200 transition-colors duration-300">
+                                        <ArrowRight size={20} strokeWidth={3} />
+                                    </div>
+                                </div>
+                                <div className="flex md:hidden justify-center shrink-0 items-center -my-3 z-20 relative">
+                                    <div className="bg-white rounded-full p-1.5 shadow-sm border border-slate-200 text-slate-300 group-hover:text-indigo-400 group-hover:border-indigo-200 transition-colors duration-300">
+                                        <ArrowRight size={20} className="transform rotate-90" strokeWidth={3} />
+                                    </div>
+                                </div>
+                                
+                                {/* Node 2: Preprocessing State */}
+                                <div className="flex-1 bg-indigo-50 hover:bg-indigo-50/80 hover:-translate-y-1 hover:shadow-md hover:shadow-indigo-100/50 border border-indigo-200 hover:border-indigo-400 rounded-3xl p-6 relative flex flex-col justify-center transition-all duration-300">
+                                    <div className="absolute -top-3.5 left-6 px-3.5 py-1 bg-white border-2 border-indigo-200 rounded-full text-[10px] sm:text-xs font-black text-indigo-600 uppercase tracking-wider shadow-sm flex items-center gap-1.5">
+                                        <Target size={14} strokeWidth={3} /> Preprocessing
+                                    </div>
+                                    <ul className="flex flex-col gap-3 mt-4 w-full">
+                                        {step.preprocessing.map((item, i) => (
+                                            <li key={i} className="flex flex-col gap-2.5">
+                                                <div className="flex gap-2.5 items-start px-1">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0 mt-2 shadow-sm"></div>
+                                                    <span className="leading-relaxed font-medium text-sm text-slate-700">{item.text}</span>
+                                                </div>
+                                                {item.before && item.after && (
+                                                    <div className="flex items-center gap-2 pl-4">
+                                                        <div className="bg-white/80 border border-indigo-200/50 rounded-xl p-1.5 flex flex-wrap items-center gap-2 shadow-sm">
+                                                            <span className="font-mono text-[10px] sm:text-[11px] bg-slate-100/80 text-slate-500 px-2.5 py-1 rounded-lg border border-slate-200/50">{item.before}</span>
+                                                            <ArrowRight size={12} className="text-indigo-300" strokeWidth={3} />
+                                                            <span className="font-mono text-[10px] sm:text-[11px] bg-indigo-100/50 text-indigo-700 font-bold px-2.5 py-1 rounded-lg border border-indigo-200/50">{item.after}</span>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Engineered Features Analysis */}
+                <div className="mt-8 border border-slate-200 rounded-[1.5rem] p-6 lg:p-8 flex flex-col gap-6 relative overflow-hidden bg-white shadow-sm">
+                    {/* Decorative Background Blob */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full blur-3xl -mr-20 -mt-20 opacity-50"></div>
+                
+                    <div className="border-b border-slate-200 pb-4 relative z-10">
+                        <h4 className="text-xl font-extrabold flex items-center gap-3 text-slate-800">
+                            <div className="bg-blue-100 p-2.5 rounded-xl text-blue-600 shadow-sm border border-blue-200">
+                                <BarChart2 size={24} />
+                            </div>
+                            Engineered Features Efficacy
+                        </h4>
+                        <p className="text-slate-500 mt-3 text-sm leading-relaxed max-w-4xl">
+                            The following visualizations demonstrate the discriminative power of the newly created features (<span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-xs text-slate-600">Deck</span>, <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-xs text-slate-600">FamilySize</span>, and <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-xs text-slate-600">IsAlone</span>), confirming their suitability for the classification task.
+                        </p>
+                    </div>
+
+                    <div className="flex flex-col gap-8 relative z-10 w-full xl:max-w-5xl mx-auto">
+                        <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group/card">
+                            <div className="p-5 border-b border-slate-100 bg-slate-50/80 flex items-center justify-between z-10 relative">
+                                <h5 className="font-bold text-slate-700 text-sm flex items-center gap-2 uppercase tracking-wide">
+                                    <Activity size={18} className="text-blue-500" /> Distribution by Survival Rate
+                                </h5>
+                            </div>
+                            <div 
+                                className="flex-1 p-6 bg-white flex items-center justify-center cursor-zoom-in relative group/img overflow-hidden"
+                                onClick={() => setZoomedImg(distributionBySurvivalRatePlot)}
+                            >
+                                <img 
+                                    src={distributionBySurvivalRatePlot} 
+                                    alt="Distribution of Engineered Features by Survival Rate" 
+                                    className="w-full h-auto rounded-xl object-contain border border-slate-50 transition-all duration-500 group-hover/img:scale-[1.02]"
+                                />
+                                <div className="absolute inset-0 bg-slate-900/0 group-hover/img:bg-slate-900/5 transition-colors duration-300 rounded-xl flex items-center justify-center pointer-events-none">
+                                    <div className="bg-white/95 px-5 py-2.5 rounded-full opacity-0 group-hover/img:opacity-100 transition-all duration-300 shadow-lg flex items-center gap-2 transform translate-y-4 group-hover/img:translate-y-0 text-slate-600 font-bold text-sm border border-slate-100 pointer-events-none">
+                                        <ZoomIn size={18} className="text-slate-500" /> Click to expand
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="p-5 border-t border-slate-100 bg-slate-50/50 z-10 relative">
+                                <p className="text-sm text-slate-600 leading-relaxed font-medium">
+                                    Highlights the proportion of survivals mapping onto different deck levels and isolated passengers, establishing clear categorical separators.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group/card">
+                            <div className="p-5 border-b border-slate-100 bg-slate-50/80 flex items-center justify-between z-10 relative">
+                                <h5 className="font-bold text-slate-700 text-sm flex items-center gap-2 uppercase tracking-wide">
+                                    <Target size={18} className="text-emerald-500" /> Kernel Density Estimate
+                                </h5>
+                            </div>
+                            <div 
+                                className="flex-1 p-6 bg-white flex items-center justify-center cursor-zoom-in relative group/img overflow-hidden"
+                                onClick={() => setZoomedImg(distributionByTargetPlot)}
+                            >
+                                <img 
+                                    src={distributionByTargetPlot} 
+                                    alt="Distribution by Target" 
+                                    className="w-full h-auto rounded-xl object-contain border border-slate-50 transition-all duration-500 group-hover/img:scale-[1.02]"
+                                />
+                                <div className="absolute inset-0 bg-slate-900/0 group-hover/img:bg-slate-900/5 transition-colors duration-300 rounded-xl flex items-center justify-center pointer-events-none">
+                                    <div className="bg-white/95 px-5 py-2.5 rounded-full opacity-0 group-hover/img:opacity-100 transition-all duration-300 shadow-lg flex items-center gap-2 transform translate-y-4 group-hover/img:translate-y-0 text-slate-600 font-bold text-sm border border-slate-100 pointer-events-none">
+                                        <ZoomIn size={18} className="text-slate-500" /> Click to expand
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="p-5 border-t border-slate-100 bg-slate-50/50 z-10 relative">
+                                <p className="text-sm text-slate-600 leading-relaxed font-medium">
+                                    Density curves reveal how features like <code className="font-mono text-slate-500 bg-slate-200/50 px-1.5 py-0.5 rounded">FamilySize</code> provide varying probability distribution across both survival outcomes.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Section: Model Cards */}
             <section className="flex flex-col gap-8 mt-4">
                 <div className="border-b border-slate-200 pb-4">
@@ -280,7 +580,10 @@ const TabularClassification = () => {
                         <table className="w-full text-sm text-center">
                             <thead className="bg-slate-50 text-xs text-slate-500 uppercase font-bold border-b border-slate-200">
                                 <tr>
-                                    <th className="px-5 py-4 text-left">Model</th>
+                                    <th className="px-5 py-4 w-12 text-center border-r border-slate-100">
+                                        <span className="sr-only">Select</span>
+                                    </th>
+                                    <th className="px-4 py-4 text-left">Model</th>
                                     <th className="px-4 py-4">Stage</th>
                                     <th className="px-4 py-4">Accuracy</th>
                                     <th className="px-4 py-4">Precision</th>
@@ -292,8 +595,19 @@ const TabularClassification = () => {
                             </thead>
                             <tbody className="divide-y divide-slate-100">
                                 {sortedResults.map((row, idx) => (
-                                    <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                                        <td className="px-5 py-3 font-bold text-slate-700 text-left">
+                                    <tr key={idx} className={`hover:bg-slate-50 transition-colors ${selectedModels.includes(row.model) ? 'bg-indigo-50/20' : ''}`}>
+                                        <td className="px-5 py-3 text-center border-r border-slate-100">
+                                            <input 
+                                                type="checkbox" 
+                                                className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                                                checked={selectedModels.includes(row.model)}
+                                                onChange={() => {
+                                                    toggleModel(row.model);
+                                                    setShowComparison(false); // Reset comparison visualization if models change
+                                                }}
+                                            />
+                                        </td>
+                                        <td className="px-4 py-3 font-bold text-slate-700 text-left">
                                             <span className="flex items-center gap-2">
                                                 {row.model === topModel && <Trophy size={13} className="text-amber-400" />}
                                                 {row.model}
@@ -331,16 +645,166 @@ const TabularClassification = () => {
                             </tbody>
                         </table>
                     </div>
-                    <div className="px-5 py-3 bg-slate-50 border-t border-slate-100 flex flex-wrap gap-3 text-xs text-slate-500">
-                        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-indigo-100 inline-block border border-indigo-200"></span> Best Accuracy</span>
-                        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-purple-100 inline-block border border-purple-200"></span> Best Precision</span>
-                        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-blue-100 inline-block border border-blue-200"></span> Best Recall</span>
-                        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-emerald-100 inline-block border border-emerald-200"></span> Best F1</span>
-                        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-amber-100 inline-block border border-amber-200"></span> Best ROC AUC</span>
-                        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-teal-100 inline-block border border-teal-200"></span> Fastest Training</span>
+                    <div className="px-5 py-4 bg-slate-50 border-t border-slate-100 flex flex-wrap gap-4 text-xs text-slate-500 justify-between items-center">
+                        <div className="flex flex-wrap gap-3 flex-1">
+                            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-indigo-100 inline-block border border-indigo-200"></span> Best Accuracy</span>
+                            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-purple-100 inline-block border border-purple-200"></span> Best Precision</span>
+                            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-blue-100 inline-block border border-blue-200"></span> Best Recall</span>
+                            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-emerald-100 inline-block border border-emerald-200"></span> Best F1</span>
+                            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-amber-100 inline-block border border-amber-200"></span> Best ROC AUC</span>
+                            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-teal-100 inline-block border border-teal-200"></span> Fastest Training</span>
+                        </div>
+                        <button 
+                            onClick={handleCompare}
+                            disabled={selectedModels.length === 0}
+                            className={`px-4 py-2.5 rounded-xl font-bold shadow-sm transition-all flex items-center gap-2 whitespace-nowrap ${
+                                selectedModels.length > 0 
+                                ? 'bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-md hover:-translate-y-0.5' 
+                                : 'bg-slate-200 text-slate-400 cursor-not-allowed opacity-70'
+                            }`}
+                        >
+                            <Settings size={16} className={selectedModels.length > 0 ? "animate-[spin_4s_linear_infinite]" : ""} /> 
+                            Compare Selected ({selectedModels.length})
+                        </button>
                     </div>
                 </div>
             </section>
+
+            {/* Compare Models Detailed Section */}
+            {showComparison && selectedModels.length > 0 && (
+                <section id="comparison-section" className="flex flex-col gap-8 mt-4 pt-8 border-t border-slate-200 animate-in fade-in slide-in-from-bottom-8 duration-500">
+                    <div className="border-b border-slate-200 pb-4">
+                        <h3 className="text-2xl font-bold flex items-center gap-3 text-slate-800">
+                            <div className="bg-indigo-100 p-2 rounded-xl">
+                                <Cpu className="text-indigo-600" size={24} />
+                            </div>
+                            Detailed Model Comparison
+                        </h3>
+                        <p className="text-slate-500 mt-2 text-base max-w-3xl">
+                            A breakdown of the Per-Class F1 Score and Confusion Matrices to evaluate misclassifications and deeper metric disparities across the target classes.
+                        </p>
+                    </div>
+
+                    <div className="flex flex-col gap-6">
+                        {selectedModels.map(model => {
+                            const details = modelDetails[model];
+                            if (!details) return null;
+                            return (
+                                <div key={model} className="bg-white border border-slate-200 rounded-3xl p-6 lg:p-8 shadow-sm flex flex-col gap-6 relative overflow-hidden group">
+                                    {/* Decorative gradient drop */}
+                                    <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-indigo-100/50 to-purple-100/50 rounded-full blur-3xl -mr-10 -mt-10 opacity-70"></div>
+                                    
+                                    <h4 className="text-xl font-bold text-slate-800 flex items-center gap-3 relative z-10 w-full border-b border-slate-100 pb-4">
+                                        {model === topModel && <Trophy size={22} className="text-amber-500" />}
+                                        {model} 
+                                        <span className="text-[10px] uppercase font-bold text-indigo-500 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">Baseline</span>
+                                    </h4>
+
+                                    <div className="flex flex-col md:flex-row gap-8 relative z-10">
+                                        {/* Per-Class F1 Score Table */}
+                                        <div className="flex-1 flex flex-col">
+                                            <h5 className="text-xs uppercase tracking-widest font-bold text-slate-500 mb-3 flex items-center gap-2">
+                                                <Target size={15} className="text-indigo-400" /> Per-Class F1 Score
+                                            </h5>
+                                            <div className="border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex-1">
+                                                <table className="w-full text-sm text-center h-full">
+                                                    <thead className="bg-slate-50/80 border-b border-slate-200">
+                                                        <tr>
+                                                            <th className="px-4 py-3 font-bold text-slate-600">Not Survived (0)</th>
+                                                            <th className="px-4 py-3 font-bold text-slate-600">Survived (1)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-slate-100">
+                                                        <tr>
+                                                            <td className="px-4 py-6 bg-slate-50/30 border-r border-slate-100">
+                                                                <span className="font-mono text-base font-black text-indigo-700 bg-indigo-100 px-4 py-1.5 rounded-xl border border-indigo-200 shadow-sm">
+                                                                    {details.f1_0.toFixed(4)}
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-4 py-6 bg-slate-50/30">
+                                                                <span className="font-mono text-base font-black text-purple-700 bg-purple-100 px-4 py-1.5 rounded-xl border border-purple-200 shadow-sm">
+                                                                    {details.f1_1.toFixed(4)}
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        {/* Confusion Matrix Table */}
+                                        <div className="flex-1 flex flex-col">
+                                            <h5 className="text-xs uppercase tracking-widest font-bold text-slate-500 mb-3 flex items-center gap-2">
+                                                <Activity size={15} className="text-emerald-400" /> Confusion Matrix
+                                            </h5>
+                                            <div className="border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex-1">
+                                                <table className="w-full text-sm text-center h-full">
+                                                    <thead className="bg-slate-50/80 border-b border-slate-200">
+                                                        <tr>
+                                                            <th className="px-2 py-3 border-r border-slate-200 text-slate-400 font-medium text-xs">Actual \ Pred</th>
+                                                            <th className="px-2 py-3 font-bold text-slate-600">Not Survived</th>
+                                                            <th className="px-2 py-3 font-bold text-slate-600">Survived</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="flex-1">
+                                                        <tr>
+                                                            <td className="px-2 py-3 font-bold text-slate-600 bg-slate-50/80 border-r border-slate-200 border-b border-slate-100 leading-tight">Not<br/>Survived</td>
+                                                            <td className="px-2 py-3 border-r border-emerald-100 border-b border-emerald-100 bg-emerald-50">
+                                                                <span className="font-mono font-black text-emerald-700">{details.cm[0][0]}</span>
+                                                                <span className="block text-[10px] text-emerald-500 font-medium uppercase mt-0.5">True Neg</span>
+                                                            </td>
+                                                            <td className="px-2 py-3 border-b border-rose-100 bg-rose-50">
+                                                                <span className="font-mono font-black text-rose-700">{details.cm[0][1]}</span>
+                                                                <span className="block text-[10px] text-rose-500 font-medium uppercase mt-0.5">False Pos</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className="px-2 py-3 font-bold text-slate-600 bg-slate-50/80 border-r border-slate-200">Survived</td>
+                                                            <td className="px-2 py-3 border-r border-rose-100 bg-rose-50">
+                                                                <span className="font-mono font-black text-rose-700">{details.cm[1][0]}</span>
+                                                                <span className="block text-[10px] text-rose-500 font-medium uppercase mt-0.5">False Neg</span>
+                                                            </td>
+                                                            <td className="px-2 py-3 bg-emerald-50">
+                                                                <span className="font-mono font-black text-emerald-700">{details.cm[1][1]}</span>
+                                                                <span className="block text-[10px] text-emerald-500 font-medium uppercase mt-0.5">True Pos</span>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </section>
+            )}
+
+            {/* Image Modal for Engineered Features Plots */}
+            {zoomedImg && (
+                <div 
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+                    onClick={() => setZoomedImg(null)}
+                >
+                    <div className="relative max-w-7xl max-h-screen p-2 flex justify-center items-center">
+                        <button 
+                            className="absolute -top-4 -right-4 bg-white text-slate-800 p-2 rounded-full shadow-lg hover:bg-slate-100 transition-colors z-[110]"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setZoomedImg(null);
+                            }}
+                        >
+                            <X size={24} />
+                        </button>
+                        <img 
+                            src={zoomedImg} 
+                            alt="Zoomed" 
+                            className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl animate-in zoom-in-95 duration-300"
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
