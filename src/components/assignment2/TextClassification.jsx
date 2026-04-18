@@ -4,7 +4,8 @@ import {
     ArrowRight, ArrowDown, Database, Target, BarChart3, 
     Zap, Activity, LayoutTemplate, Settings, AlertTriangle, Lightbulb, Flag
 } from 'lucide-react';
-
+import { ChevronDown } from "lucide-react";
+import { Snowflake, Flame } from "lucide-react";
 // --- IMPORT ẢNH TỪ ASSETS ---
 // Tab 1
 import labelDistImg from '../../assets/classification-text/label_distribution.png';
@@ -57,20 +58,33 @@ const TextClassification = () => {
             </div>
 
             {/* --- TAB NAVIGATION --- */}
-            <div className="flex flex-wrap gap-3 border-b border-slate-200 pb-4 sticky top-0 bg-slate-50/80 backdrop-blur-md z-10 pt-2">
-                {tabs.map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-bold transition-all duration-300 ${
-                            activeTab === tab.id 
-                            ? `bg-${tab.color}-600 text-white shadow-lg shadow-${tab.color}-200 scale-105` 
-                            : 'bg-white text-slate-500 hover:bg-slate-100 hover:text-slate-800 border border-slate-200'
-                        }`}
-                    >
-                        {tab.icon} {tab.label}
-                    </button>
-                ))}
+            <div className="grid grid-cols-5 gap-3 border-b border-slate-200 pb-4 sticky top-0 bg-slate-50/80 backdrop-blur-md z-10 pt-2">
+                {tabs.map((tab) => {
+                    const isActive = activeTab === tab.id;
+
+                    const colorMap = {
+                        emerald: "bg-emerald-600 text-white shadow-emerald-200",
+                        blue: "bg-blue-600 text-white shadow-blue-200",
+                        purple: "bg-purple-600 text-white shadow-purple-200",
+                        rose: "bg-rose-600 text-white shadow-rose-200",
+                        amber: "bg-amber-500 text-white shadow-amber-200",
+                    };
+
+                    return (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`flex items-center justify-center gap-2 px-4 py-3 rounded-2xl font-bold transition-all duration-300 text-sm
+                            ${
+                                isActive
+                                    ? colorMap[tab.color]
+                                    : "bg-white text-slate-500 hover:bg-slate-100 border border-slate-200"
+                            }`}
+                        >
+                            {tab.icon} <span className="hidden md:inline">{tab.label}</span>
+                        </button>
+                    );
+                })}
             </div>
 
             {/* --- TAB CONTENTS --- */}
@@ -274,7 +288,6 @@ df['label_encoded'] = df['label'].map(label_map)`}
                         <div className="flex flex-col items-center">
                             <h4 className="font-bold text-slate-700 mb-4 text-xl">Cross-Validation Baseline Comparison</h4>
                             <img src={mlCompImg} alt="ML Comparison" className="w-full max-w-5xl rounded-2xl shadow-sm border border-slate-100" />
-                            <p className="text-xs text-slate-400 mt-4 font-mono"># NOTE: Confusion matrix visualization omitted due to missing artifact.</p>
                         </div>
                     </div>
                 )}
@@ -300,28 +313,34 @@ df['label_encoded'] = df['label'].map(label_map)`}
                         </div>
 
                         {/* Architecture Flow & Why */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200">
-                                <h3 className="text-xl font-black text-slate-800 mb-6">Why Transformers?</h3>
-                                <ul className="space-y-4 text-slate-600">
-                                    <li className="flex gap-3"><Zap className="text-purple-500 shrink-0"/> <div><strong>Context-Aware Embeddings:</strong> Distinguishes meaning based on surrounding words (e.g., 'light' weight vs 'light' color).</div></li>
-                                    <li className="flex gap-3"><Zap className="text-purple-500 shrink-0"/> <div><strong>Self-Attention Mechanism:</strong> Handles long-range dependencies across multi-sentence paragraphs perfectly.</div></li>
-                                    <li className="flex gap-3"><Zap className="text-purple-500 shrink-0"/> <div><strong>Pretrained Knowledge:</strong> Leverages linguistic structures learned from massive global corpora.</div></li>
-                                </ul>
+                        <div className="flex flex-col items-center gap-3 w-full max-w-sm mx-auto text-sm font-bold text-center">
+
+                            <div className="bg-white w-full p-3 rounded-xl border shadow-sm font-mono">
+                                Raw Text
                             </div>
-                            <div className="bg-purple-50 p-8 rounded-3xl border border-purple-100 flex flex-col items-center justify-center">
-                                <h3 className="text-lg font-black text-purple-900 mb-4 text-center">Transformer Information Flow</h3>
-                                <div className="flex flex-col gap-1.5 w-full max-w-sm text-xs font-bold text-center">
-                                    <div className="bg-white text-slate-600 p-2.5 rounded-lg border shadow-sm font-mono">Raw Text</div>
-                                    <ArrowDown className="mx-auto text-purple-300" size={16}/>
-                                    <div className="bg-white text-slate-600 p-2.5 rounded-lg border shadow-sm">Subword Tokenization (BPE)</div>
-                                    <ArrowDown className="mx-auto text-purple-300" size={16}/>
-                                    <div className="bg-purple-600 text-white p-3 rounded-xl shadow-md text-sm">Encoder (Self-Attention Layers)</div>
-                                    <ArrowDown className="mx-auto text-purple-300" size={16}/>
-                                    <div className="bg-white text-slate-600 p-2.5 rounded-lg border shadow-sm font-mono">[CLS] Representation Vector</div>
-                                    <ArrowDown className="mx-auto text-purple-300" size={16}/>
-                                    <div className="bg-emerald-100 text-emerald-800 p-2.5 rounded-lg border border-emerald-200">Linear Head ➔ Softmax</div>
-                                </div>
+
+                            <ChevronDown className="text-purple-500 stroke-[2.5]" size={22} />
+
+                            <div className="bg-white w-full p-3 rounded-xl border shadow-sm">
+                                Tokenizer (BPE)
+                            </div>
+
+                            <ChevronDown className="text-purple-500 stroke-[2.5]" size={22} />
+
+                            <div className="bg-purple-600 text-white w-full p-3 rounded-xl shadow-md">
+                                Transformer Encoder
+                            </div>
+
+                            <ChevronDown className="text-purple-500 stroke-[2.5]" size={22} />
+
+                            <div className="bg-white w-full p-3 rounded-xl border shadow-sm font-mono">
+                                [CLS] Embedding
+                            </div>
+
+                            <ChevronDown className="text-purple-500 stroke-[2.5]" size={22} />
+
+                            <div className="bg-emerald-100 text-emerald-800 w-full p-3 rounded-xl border">
+                                Classification Head
                             </div>
                         </div>
 
@@ -371,31 +390,50 @@ df['label_encoded'] = df['label'].map(label_map)`}
 
                         {/* Plots */}
                         <div className="flex flex-col gap-8">
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 flex flex-col">
-                                    <h4 className="font-bold text-center text-slate-700 mb-4">Training History</h4>
-                                    <img src={tfHistoryImg} alt="TF History" className="w-full mt-auto rounded-xl shadow-sm" />
-                                </div>
-                                <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 flex flex-col">
-                                    <h4 className="font-bold text-center text-slate-700 mb-4">Metrics Comparison</h4>
-                                    <img src={tfCompImg} alt="TF Comparison" className="w-full mt-auto rounded-xl shadow-sm" />
-                                </div>
+                            <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 flex flex-col">
+                                <h4 className="font-bold text-center text-slate-700 mb-4">
+                                    Training History
+                                </h4>
+                                <img src={tfHistoryImg} className="w-full rounded-xl shadow-sm" />
+                            </div>
+
+                            <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 flex flex-col">
+                                <h4 className="font-bold text-center text-slate-700 mb-4">
+                                    Metrics Comparison
+                                </h4>
+                                <img src={tfCompImg} className="w-full rounded-xl shadow-sm" />
                             </div>
                             
                             <div className="bg-slate-50 p-6 md:p-10 rounded-3xl border border-slate-200">
-                                <h4 className="font-black text-center text-slate-800 text-2xl mb-8">Confusion Matrices Analysis</h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                                    <img src={confuse1_1} alt="CM 1" className="rounded-2xl shadow-sm border border-white"/>
-                                    <img src={confuse1_2} alt="CM 2" className="rounded-2xl shadow-sm border border-white"/>
-                                    <img src={confuse1_3} alt="CM 3" className="rounded-2xl shadow-sm border border-white"/>
-                                    <img src={confuse1_4} alt="CM 4" className="rounded-2xl shadow-sm border border-white"/>
-                                    <div className="md:col-span-2 flex justify-center mt-4">
-                                        <div className="w-full max-w-xl">
-                                            <img src={confuse1_5} alt="CM 5" className="rounded-2xl shadow-md border-4 border-purple-200"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+    <h4 className="font-black text-center text-slate-800 text-2xl mb-8">
+        Confusion Matrices Analysis
+    </h4>
+
+    {/* Top 4 images */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[confuse1_1, confuse1_2, confuse1_3, confuse1_4].map((img, idx) => (
+            <div
+                key={idx}
+                className="bg-white p-3 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md hover:scale-[1.02] transition-all"
+            >
+                <img src={img} className="rounded-xl w-full" />
+            </div>
+        ))}
+    </div>
+
+    {/* Highlight final model */}
+    <div className="flex justify-center mt-10">
+        <div className="w-full max-w-2xl bg-white p-4 rounded-3xl shadow-lg border-2 border-purple-300 hover:scale-[1.02] transition-all">
+            <img
+                src={confuse1_5}
+                className="rounded-2xl w-full"
+            />
+            <p className="text-center mt-3 text-sm font-bold text-purple-700">
+                Best Model (E5 Tuned)
+            </p>
+        </div>
+    </div>
+</div>
                         </div>
                     </div>
                 )}
@@ -420,15 +458,43 @@ df['label_encoded'] = df['label'].map(label_map)`}
                                         <p className="text-slate-400 text-xs">Unlike Transformers, Word2Vec assigns exactly ONE vector per word. It cannot distinguish context (e.g., "bank" as a river vs. "bank" for finance). This acts as a performance ceiling.</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center justify-center">
-                                    <div className="text-center font-mono text-sm text-slate-400 bg-black/30 p-6 rounded-2xl w-full">
-                                        <p className="mb-2 text-rose-300">Tokens → Vocabulary → Indices</p>
-                                        <ArrowDown className="mx-auto my-2" size={16}/>
-                                        <p className="mb-2 text-emerald-300">Embedding Lookup Matrix E ∈ ℝ^(|V|×d)</p>
-                                        <ArrowDown className="mx-auto my-2" size={16}/>
-                                        <p className="text-blue-300">Sequential Model Input X</p>
-                                    </div>
+                            <div className="flex flex-col items-center gap-3 w-full max-w-sm mx-auto text-sm font-bold text-center">
+
+                                {/* Tokens */}
+                                <div className="bg-slate-900 text-rose-300 w-full p-3 rounded-xl border border-slate-700 shadow-sm font-mono">
+                                    Tokens
                                 </div>
+
+                                <ChevronDown className="text-rose-500 stroke-[2.5]" size={22} />
+
+                                {/* Vocabulary */}
+                                <div className="bg-slate-900 text-rose-300 w-full p-3 rounded-xl border border-slate-700 shadow-sm font-mono">
+                                    Vocabulary
+                                </div>
+
+                                <ChevronDown className="text-rose-500 stroke-[2.5]" size={22} />
+
+                                {/* Indices */}
+                                <div className="bg-slate-900 text-rose-300 w-full p-3 rounded-xl border border-slate-700 shadow-sm font-mono">
+                                    Indices
+                                </div>
+
+                                <ChevronDown className="text-rose-500 stroke-[2.5]" size={22} />
+
+                                {/* Embedding */}
+                                <div className="bg-rose-100 text-rose-800 w-full p-3 rounded-xl border border-rose-200 shadow-sm">
+                                    Embedding Lookup Matrix <br />
+                                    <span className="font-mono text-xs">E ∈ ℝ^(|V|×d)</span>
+                                </div>
+
+                                <ChevronDown className="text-rose-500 stroke-[2.5]" size={22} />
+
+                                {/* Output */}
+                                <div className="bg-blue-100 text-blue-800 w-full p-3 rounded-xl border border-blue-200 shadow-sm">
+                                    Sequential Model Input X
+                                </div>
+
+                            </div>
                             </div>
                         </div>
 
@@ -442,13 +508,13 @@ df['label_encoded'] = df['label'].map(label_map)`}
                                     <p className="text-xs text-slate-500 mb-6 h-8">Captures local n-gram patterns fast.</p>
                                     <div className="text-[11px] font-mono font-bold text-slate-600 flex flex-col gap-1.5 w-full">
                                         <div className="bg-white p-2 rounded shadow-sm">Embedding(seq, 100)</div>
-                                        <ArrowDown className="mx-auto" size={12}/>
+                                        <ChevronDown className="mx-auto text-slate-300 animate-pulse" size={16}/>
                                         <div className="bg-white p-2 rounded shadow-sm">Permute</div>
-                                        <ArrowDown className="mx-auto" size={12}/>
+                                        <ChevronDown className="mx-auto text-slate-300 animate-pulse" size={16}/>
                                         <div className="bg-rose-100 text-rose-800 border border-rose-200 p-2 rounded">Conv1D(k=5)</div>
-                                        <ArrowDown className="mx-auto" size={12}/>
+                                        <ChevronDown className="mx-auto text-slate-300 animate-pulse" size={16}/>
                                         <div className="bg-white p-2 rounded shadow-sm">AdaptiveMaxPool</div>
-                                        <ArrowDown className="mx-auto" size={12}/>
+                                        <ChevronDown className="mx-auto text-slate-300 animate-pulse" size={16}/>
                                         <div className="bg-slate-800 text-white p-2 rounded">Linear Head</div>
                                     </div>
                                 </div>
@@ -459,13 +525,13 @@ df['label_encoded'] = df['label'].map(label_map)`}
                                     <p className="text-xs text-slate-500 mb-6 h-8">Sequential, but weak long-term memory.</p>
                                     <div className="text-[11px] font-mono font-bold text-slate-600 flex flex-col gap-1.5 w-full">
                                         <div className="bg-white p-2 rounded shadow-sm">Embedding(seq, 100)</div>
-                                        <ArrowDown className="mx-auto" size={12}/>
+                                        <ChevronDown className="mx-auto text-slate-300 animate-pulse" size={16}/>
                                         <div className="bg-purple-100 text-purple-800 border border-purple-200 p-2 rounded">RNN(hidden=128)</div>
-                                        <ArrowDown className="mx-auto" size={12}/>
+                                        <ChevronDown className="mx-auto text-slate-300 animate-pulse" size={16}/>
                                         <div className="bg-white p-2 rounded shadow-sm">Extract state (h)</div>
-                                        <ArrowDown className="mx-auto" size={12}/>
+                                        <ChevronDown className="mx-auto text-slate-300 animate-pulse" size={16}/>
                                         <div className="bg-white p-2 rounded shadow-sm">Squeeze(0)</div>
-                                        <ArrowDown className="mx-auto" size={12}/>
+                                        <ChevronDown className="mx-auto text-slate-300 animate-pulse" size={16}/>
                                         <div className="bg-slate-800 text-white p-2 rounded">Linear Head</div>
                                     </div>
                                 </div>
@@ -476,13 +542,13 @@ df['label_encoded'] = df['label'].map(label_map)`}
                                     <p className="text-xs text-slate-500 mb-6 h-8">Solves vanishing gradient, better memory.</p>
                                     <div className="text-[11px] font-mono font-bold text-slate-600 flex flex-col gap-1.5 w-full">
                                         <div className="bg-white p-2 rounded shadow-sm">Embedding(seq, 100)</div>
-                                        <ArrowDown className="mx-auto" size={12}/>
+                                        <ChevronDown className="mx-auto text-slate-300 animate-pulse" size={16}/>
                                         <div className="bg-amber-100 text-amber-800 border border-amber-200 p-2 rounded">LSTM(hidden=128)</div>
-                                        <ArrowDown className="mx-auto" size={12}/>
+                                        <ChevronDown className="mx-auto text-slate-300 animate-pulse" size={16}/>
                                         <div className="bg-white p-2 rounded shadow-sm">Extract h[-1]</div>
                                         <ArrowDown className="mx-auto text-transparent" size={12}/>
                                         <div className="bg-white p-2 rounded shadow-sm border-transparent text-transparent select-none">Spacer</div>
-                                        <ArrowDown className="mx-auto" size={12}/>
+                                        <ChevronDown className="mx-auto text-slate-300 animate-pulse" size={16}/>
                                         <div className="bg-slate-800 text-white p-2 rounded">Linear Head</div>
                                     </div>
                                 </div>
@@ -494,13 +560,13 @@ df['label_encoded'] = df['label'].map(label_map)`}
                                     <p className="text-xs text-blue-600/70 mb-6 h-8">Context from both directions.</p>
                                     <div className="text-[11px] font-mono font-bold text-slate-600 flex flex-col gap-1.5 w-full">
                                         <div className="bg-white p-2 rounded shadow-sm">Embedding(seq, 100)</div>
-                                        <ArrowDown className="mx-auto" size={12}/>
+                                        <ChevronDown className="mx-auto text-slate-300 animate-pulse" size={16}/>
                                         <div className="bg-blue-100 text-blue-800 border border-blue-200 p-2 rounded">BiLSTM(bidirectional)</div>
-                                        <ArrowDown className="mx-auto" size={12}/>
+                                        <ChevronDown className="mx-auto text-slate-300 animate-pulse" size={16}/>
                                         <div className="bg-white p-2 rounded shadow-sm">Concat(h[-2], h[-1])</div>
                                         <ArrowDown className="mx-auto text-transparent" size={12}/>
                                         <div className="bg-white p-2 rounded shadow-sm border-transparent text-transparent select-none">Spacer</div>
-                                        <ArrowDown className="mx-auto" size={12}/>
+                                        <ChevronDown className="mx-auto text-slate-300 animate-pulse" size={16}/>
                                         <div className="bg-slate-800 text-white p-2 rounded">Linear(in=256)</div>
                                     </div>
                                 </div>
@@ -509,25 +575,35 @@ df['label_encoded'] = df['label'].map(label_map)`}
 
                         {/* Plots */}
                         <div className="flex flex-col gap-8">
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                                    <h4 className="font-bold text-center text-slate-700 mb-4">Training History</h4>
-                                    <img src={w2vHistoryImg} alt="W2V History" className="w-full rounded-xl" />
+                            <div className="flex flex-col gap-8">
+                                <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 flex flex-col">
+                                    <h4 className="font-bold text-center text-slate-700 mb-4">
+                                        Training History
+                                    </h4>
+                                    <img src={w2vHistoryImg} className="w-full rounded-xl shadow-sm" />
                                 </div>
-                                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                                    <h4 className="font-bold text-center text-slate-700 mb-4">Model Comparison</h4>
-                                    <img src={w2vCompImg} alt="W2V Comparison" className="w-full rounded-xl" />
+
+                                <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 flex flex-col">
+                                    <h4 className="font-bold text-center text-slate-700 mb-4">
+                                        Metrics Comparison
+                                    </h4>
+                                    <img src={w2vCompImg} className="w-full rounded-xl shadow-sm" />
                                 </div>
                             </div>
 
-                            <div className="bg-slate-50 p-6 md:p-10 rounded-3xl border border-slate-200">
-                                <h4 className="font-black text-center text-slate-800 text-2xl mb-8">Confusion Matrices (W2V Models)</h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <img src={confuse2_1} alt="W2V CM 1" className="rounded-2xl shadow-sm border border-white hover:scale-[1.02] transition-transform"/>
-                                    <img src={confuse2_2} alt="W2V CM 2" className="rounded-2xl shadow-sm border border-white hover:scale-[1.02] transition-transform"/>
-                                    <img src={confuse2_3} alt="W2V CM 3" className="rounded-2xl shadow-sm border border-white hover:scale-[1.02] transition-transform"/>
-                                    <img src={confuse2_4} alt="W2V CM 4" className="rounded-2xl shadow-sm border border-white hover:scale-[1.02] transition-transform"/>
-                                </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {[confuse2_1, confuse2_2, confuse2_3, confuse2_4].map((img, idx) => (
+                                    <div
+                                        key={idx}
+                                        className="flex items-center justify-center bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all"
+                                    >
+                                        <img
+                                            src={img}
+                                            alt={`W2V CM ${idx + 1}`}
+                                            className="max-w-full h-auto rounded-xl"
+                                        />
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
