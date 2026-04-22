@@ -149,148 +149,517 @@ const TextClassification = () => {
                         </div>
 
                         {/* Label Distribution & Imbalance */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center pt-8 border-t border-slate-100">
-                            <div className="flex flex-col gap-6">
-                                <h3 className="text-2xl font-black text-slate-800">Target Labeling & Imbalance</h3>
-                                <div className="bg-slate-900 rounded-2xl p-4 overflow-hidden">
-                                    <pre className="text-emerald-400 text-sm font-mono leading-relaxed">
-                                        <code>
-{`label_map = {
-    'negative': 0,
-    'neutral':  1,
-    'positive': 2
-}
-df['label_encoded'] = df['label'].map(label_map)`}
-                                        </code>
-                                    </pre>
-                                </div>
-                                <div className="bg-rose-50 border-l-4 border-rose-400 p-4 rounded-r-xl">
-                                    <h5 className="font-bold text-rose-900 flex items-center gap-2 mb-1"><AlertTriangle size={18}/> Class Imbalance Issue</h5>
-                                    <p className="text-sm text-rose-800">Positive class dominates (~50%), while Neutral is severely underrepresented. This justifies the mandatory use of <strong>class_weight='balanced'</strong> and <strong>Macro F1</strong> as the primary evaluation metric.</p>
-                                </div>
-                            </div>
-                            <div className="flex justify-center bg-white p-4 rounded-3xl border border-slate-100 shadow-sm">
-                                <img src={labelDistImg} alt="Label Distribution" className="w-full max-w-md rounded-2xl" />
-                            </div>
-                        </div>
+                        <div className="flex flex-col gap-8 pt-8 border-t border-slate-100">
+
+    {/* ===== ROW 1: Target + Code ===== */}
+    <div className="flex flex-col gap-6">
+        <div className="flex flex-col items-center gap-8">
+
+    <h3 className="text-2xl font-black text-slate-800">
+        Target Encoding Pipeline
+    </h3>
+
+    <div className="flex flex-col md:flex-row items-center gap-8">
+
+        {/* ===== STEP 1: Rating → Label ===== */}
+        <div className="flex flex-col gap-4 items-center">
+
+            <h4 className="text-sm font-semibold text-slate-500">
+                Step 1: Rating → Sentiment
+            </h4>
+
+            <div className="flex flex-col gap-3">
+                <div className="px-5 py-3 rounded-xl bg-red-100 text-red-700 font-semibold">
+                    ⭐ &lt; 3 → negative
+                </div>
+                <div className="px-5 py-3 rounded-xl bg-gray-100 text-gray-700 font-semibold">
+                    ⭐ = 3 → neutral
+                </div>
+                <div className="px-5 py-3 rounded-xl bg-green-100 text-green-700 font-semibold">
+                    ⭐ &gt; 3 → positive
+                </div>
+            </div>
+
+        </div>
+
+        {/* Arrow */}
+        <div className="text-3xl font-bold text-slate-400">→</div>
+
+        {/* ===== STEP 2: Label → Number ===== */}
+        <div className="flex flex-col gap-4 items-center">
+
+            <h4 className="text-sm font-semibold text-slate-500">
+                Step 2: Label Encoding
+            </h4>
+
+            <div className="flex flex-col gap-3">
+                <div className="px-5 py-3 rounded-xl bg-red-50 text-red-700 font-semibold flex justify-between gap-6">
+                    <span>negative</span> <span className="font-bold">0</span>
+                </div>
+                <div className="px-5 py-3 rounded-xl bg-gray-50 text-gray-700 font-semibold flex justify-between gap-6">
+                    <span>neutral</span> <span className="font-bold">1</span>
+                </div>
+                <div className="px-5 py-3 rounded-xl bg-green-50 text-green-700 font-semibold flex justify-between gap-6">
+                    <span>positive</span> <span className="font-bold">2</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    </div>
+
+    {/* ===== ROW 2: Image + Table ===== */}
+    <div className="flex flex-col md:flex-row gap-6 bg-white p-4 rounded-3xl border border-slate-100 shadow-sm">
+
+        {/* Image */}
+        <div className="flex justify-center items-center flex-1">
+            <img 
+                src={labelDistImg} 
+                alt="Label Distribution" 
+                className="w-full max-w-md rounded-2xl"
+            />
+        </div>
+
+        {/* Table */}
+        <div className="flex items-center justify-center flex-1">
+    <table className="border border-slate-200 rounded-xl overflow-hidden text-base min-w-[260px]">
+        <thead className="bg-slate-100">
+            <tr>
+                <th className="px-6 py-3 text-left font-semibold">Label</th>
+                <th className="px-6 py-3 text-left font-semibold">Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr className="border-t">
+                <td className="px-6 py-3">positive</td>
+                <td className="px-6 py-3 font-medium">5994</td>
+            </tr>
+            <tr className="border-t">
+                <td className="px-6 py-3">negative</td>
+                <td className="px-6 py-3 font-medium">3998</td>
+            </tr>
+            <tr className="border-t">
+                <td className="px-6 py-3">neutral</td>
+                <td className="px-6 py-3 font-medium">2000</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+    </div>
+    <div className="bg-rose-50 border-l-4 border-rose-400 p-4 rounded-r-xl">
+            <h5 className="font-bold text-rose-900 flex items-center gap-2 mb-1">
+                <AlertTriangle size={18}/> Class Imbalance Issue
+            </h5>
+            <p className="text-sm text-rose-800">
+                Positive class dominates (~50%), while Neutral is severely underrepresented.
+            </p>
+        </div>
+
+</div>
                     </div>
                 )}
 
 
-                {/* =========================================
-                    TAB 2: TRADITIONAL ML
-                ========================================= */}
-                {activeTab === 'ml' && (
-                    <div className="flex flex-col gap-12 animate-in slide-in-from-bottom-4 duration-500">
-                        
-                        {/* Baseline & Insights */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <div className="bg-blue-600 text-white p-8 rounded-3xl shadow-lg flex flex-col justify-center">
-                                <div className="bg-blue-500/50 text-blue-100 px-3 py-1 rounded-full text-xs font-bold w-max mb-4 uppercase tracking-wider">Strong Baseline</div>
-                                <h3 className="text-3xl font-black mb-2">Logistic Regression</h3>
-                                <p className="mb-6 text-blue-100 text-sm">Why? It provides a fast, interpretable, and highly effective linear boundary for high-dimensional TF-IDF spaces.</p>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-blue-700/40 p-4 rounded-2xl text-center border border-blue-500/30">
-                                        <p className="text-xs font-bold text-blue-200 uppercase mb-1">Accuracy</p>
-                                        <p className="text-3xl font-black">75.99%</p>
-                                    </div>
-                                    <div className="bg-blue-700/40 p-4 rounded-2xl text-center border border-blue-500/30">
-                                        <p className="text-xs font-bold text-blue-200 uppercase mb-1">Macro F1</p>
-                                        <p className="text-3xl font-black text-amber-300">66.68%</p>
-                                    </div>
-                                </div>
-                            </div>
+{activeTab === 'ml' && (
+<div className="flex flex-col gap-16 animate-in slide-in-from-bottom-4 duration-500">
 
-                            <div className="bg-slate-50 border border-slate-200 p-8 rounded-3xl flex flex-col justify-center">
-                                <h4 className="text-xl font-black text-slate-700 mb-4">Per-Class Performance Observation</h4>
-                                <ul className="space-y-4">
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle2 className="text-emerald-500 shrink-0 mt-1" size={20}/>
-                                        <div>
-                                            <p className="font-bold text-slate-800">Positive & Negative (Strong)</p>
-                                            <p className="text-sm text-slate-500">F1-Scores ~0.80. Linear models easily separate distinct polarities.</p>
-                                        </div>
-                                    </li>
-                                    <li className="flex items-start gap-3">
-                                        <AlertTriangle className="text-rose-500 shrink-0 mt-1" size={20}/>
-                                        <div>
-                                            <p className="font-bold text-rose-600">Neutral Class (F1 = 0.36) ❌</p>
-                                            <p className="text-sm text-slate-600">Severely struggles. Reason: High semantic ambiguity and vocabulary overlap with both polarities. 3-star reviews often contain both praises and complaints.</p>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+{/* ===================== FEATURE ENGINEERING ===================== */}
+<div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm flex flex-col gap-8">
 
-                        {/* Models Grid */}
-                        <div className="flex flex-col gap-6">
-                            <h3 className="text-2xl font-black text-slate-800">Evaluated Architectures</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                <div className="p-4 border border-slate-200 rounded-2xl bg-white"><p className="font-bold text-blue-700">LinearSVC</p><p className="text-xs text-slate-500 mt-1">Margin-based linear classifier</p></div>
-                                <div className="p-4 border border-blue-300 bg-blue-50 rounded-2xl"><p className="font-bold text-blue-800">LogisticRegression</p><p className="text-xs text-blue-600/70 mt-1">Probabilistic linear model</p></div>
-                                <div className="p-4 border border-slate-200 rounded-2xl bg-white"><p className="font-bold text-blue-700">NaiveBayes</p><p className="text-xs text-slate-500 mt-1">Word frequency assumption</p></div>
-                                <div className="p-4 border border-slate-200 rounded-2xl bg-white"><p className="font-bold text-blue-700">KNeighbors</p><p className="text-xs text-slate-500 mt-1">Similarity/Distance-based</p></div>
-                                <div className="p-4 border border-slate-200 rounded-2xl bg-white"><p className="font-bold text-blue-700">RandomForest</p><p className="text-xs text-slate-500 mt-1">Ensemble of decision trees</p></div>
-                                <div className="p-4 border border-slate-200 rounded-2xl bg-white"><p className="font-bold text-blue-700">DecisionTree</p><p className="text-xs text-slate-500 mt-1">Interpretable but prone to overfit</p></div>
-                            </div>
-                        </div>
+    <h3 className="text-2xl font-black text-slate-800">
+        Feature Engineering: TF-IDF (Word + Character Fusion)
+    </h3>
 
-                        {/* Tuning Strategy & Table */}
-                        <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200">
-                            <h3 className="text-xl font-black text-slate-800 mb-6 flex justify-between items-center">
-                                GridSearchCV Optimization
-                                <span className="text-sm font-normal bg-white px-3 py-1 rounded-full border">Metric: Macro F1</span>
-                            </h3>
-                            <div className="overflow-x-auto bg-white rounded-2xl border border-slate-100 shadow-sm">
-                                <table className="w-full text-left border-collapse text-sm">
-                                    <thead>
-                                        <tr className="bg-slate-50 text-slate-600 border-b">
-                                            <th className="p-4 font-bold">Model</th>
-                                            <th className="p-4 font-bold">Best Macro F1</th>
-                                            <th className="p-4 font-bold">Optimal Hyperparameters</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-slate-100 text-slate-600">
-                                        <tr className="bg-blue-50/30">
-                                            <td className="p-4 font-bold text-slate-800">LogisticRegression</td>
-                                            <td className="p-4 font-black text-blue-600 text-base">0.6547</td>
-                                            <td className="p-4 font-mono text-xs text-slate-500">penalty: 'l2', C: 1, weight: 'balanced'</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="p-4 font-bold text-slate-800">LinearSVC</td>
-                                            <td className="p-4 font-black text-blue-500">0.6527</td>
-                                            <td className="p-4 font-mono text-xs text-slate-500">C: 0.1, weight: 'balanced'</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="p-4 font-bold text-slate-800">MultinomialNB</td>
-                                            <td className="p-4 font-bold text-slate-500">0.6486</td>
-                                            <td className="p-4 font-mono text-xs text-slate-500">alpha: 0.1</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="p-4 font-bold text-slate-800">RandomForest</td>
-                                            <td className="p-4 font-bold text-slate-400">0.5637</td>
-                                            <td className="p-4 font-mono text-xs text-slate-500">est: 200, depth: 10, weight: 'balanced_sub'</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="p-4 font-bold text-slate-800">DecisionTree</td>
-                                            <td className="p-4 font-bold text-slate-400">0.4673</td>
-                                            <td className="p-4 font-mono text-xs text-slate-500">depth: 10, crit: 'entropy'</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div className="mt-4 text-center">
-                                <p className="text-slate-600 italic">💡 <strong>Insight:</strong> Simple linear models significantly outperform complex tree-based models when dealing with sparse, high-dimensional TF-IDF vectors.</p>
-                            </div>
-                        </div>
+    <div className="flex flex-col md:flex-row items-center justify-center gap-10">
 
-                        {/* Comparison Image */}
-                        <div className="flex flex-col items-center">
-                            <h4 className="font-bold text-slate-700 mb-4 text-xl">Cross-Validation Baseline Comparison</h4>
-                            <img src={mlCompImg} alt="ML Comparison" className="w-full max-w-5xl rounded-2xl shadow-sm border border-slate-100" />
-                        </div>
-                    </div>
-                )}
+        <div className="bg-slate-100 p-5 rounded-2xl max-w-xs text-center">
+            <p className="text-xs text-slate-500 mb-2">Input</p>
+            <p className="italic text-slate-800">
+                "delivery is slow but product is good"
+            </p>
+        </div>
+
+        <div className="text-3xl text-slate-400">→</div>
+
+        <div className="flex flex-col gap-4">
+
+            <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl">
+                <p className="font-bold text-blue-700 text-sm">Word TF-IDF</p>
+                <p className="text-xs text-slate-500">ngram=(1,2), max_features=10000</p>
+            </div>
+
+            <div className="bg-purple-50 border border-purple-200 p-4 rounded-xl">
+                <p className="font-bold text-purple-700 text-sm">Char TF-IDF</p>
+                <p className="text-xs text-slate-500">ngram=(3,5), max_features=20000</p>
+            </div>
+
+        </div>
+
+        <div className="text-3xl text-slate-400">→</div>
+
+        <div className="bg-slate-900 text-emerald-400 font-mono p-4 rounded-xl">
+            Sparse Vector (~30k dim)
+        </div>
+    </div>
+
+</div>
+
+
+{/* ===================== BASELINE ===================== */}
+<div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+
+    <h3 className="text-2xl font-black text-slate-800 mb-6">
+        Baseline Model: Logistic Regression
+    </h3>
+
+    
+
+    <div className="grid grid-cols-2 gap-6 mb-6">
+        
+        <div className="bg-blue-100 p-4 rounded-xl text-center">
+            <p className="text-xs">Accuracy</p>
+            <p className="text-3xl font-black">75.99%</p>
+        </div>
+        <div className="bg-blue-100 p-4 rounded-xl text-center">
+            <p className="text-xs">Macro F1</p>
+            <p className="text-3xl font-black text-blue-700">66.68%</p>
+        </div>
+    </div>
+
+    {/* ===== CV SCORES ===== */}
+<div className="mt-6 bg-slate-50 border rounded-2xl p-5">
+    <p className="font-bold text-slate-700 mb-2">Cross Validation (5-fold)</p>
+
+    {/* ===== CV SCORES (CLEAN VISUAL) ===== */}
+<div className="mt-6 bg-slate-50 border rounded-2xl p-5">
+
+    <div className="flex justify-between items-center mb-4">
+        <p className="font-bold text-slate-700">
+            Cross Validation (5-fold)
+        </p>
+
+        <span className="text-sm font-semibold bg-slate-800 text-white px-3 py-1 rounded-full">
+            Mean: 0.7396
+        </span>
+    </div>
+
+    <div className="grid grid-cols-5 gap-3">
+
+        {[
+            {score: 0.7348, color: "bg-blue-100 text-blue-700"},
+            {score: 0.7410, color: "bg-indigo-100 text-indigo-700"},
+            {score: 0.7493, color: "bg-purple-100 text-purple-700"},
+            {score: 0.7424, color: "bg-cyan-100 text-cyan-700"},
+            {score: 0.7304, color: "bg-sky-100 text-sky-700"},
+        ].map((item, i) => (
+            <div
+                key={i}
+                className={`flex flex-col items-center justify-center p-4 rounded-xl border ${item.color}`}
+            >
+                <p className="text-xs font-medium opacity-70">
+                    Fold {i + 1}
+                </p>
+                <p className="text-lg font-bold">
+                    {item.score.toFixed(4)}
+                </p>
+            </div>
+        ))}
+
+    </div>
+
+</div>
+
+</div>
+
+    {/* ===== CLASSIFICATION REPORT ===== */}
+<div className="mt-6 bg-white border rounded-2xl overflow-hidden">
+
+    <p className="font-bold text-slate-700 p-4 border-b">
+        Classification Report (Test Set)
+    </p>
+
+    <table className="w-full text-sm text-center">
+        <thead className="bg-slate-50">
+            <tr>
+                <th className="p-3 text-left">Class</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-score</th>
+                <th>Support</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr className="border-t">
+                <td className="p-3 text-left font-medium">0 (Negative)</td>
+                <td>0.78</td>
+                <td>0.82</td>
+                <td className="font-bold text-emerald-600">0.80</td>
+                <td>800</td>
+            </tr>
+
+            <tr className="border-t">
+                <td className="p-3 text-left font-medium">1 (Neutral)</td>
+                <td>0.45</td>
+                <td>0.30</td>
+                <td className="font-bold text-rose-500">0.36</td>
+                <td>400</td>
+            </tr>
+
+            <tr className="border-t">
+                <td className="p-3 text-left font-medium">2 (Positive)</td>
+                <td>0.81</td>
+                <td>0.87</td>
+                <td className="font-bold text-emerald-600">0.84</td>
+                <td>1199</td>
+            </tr>
+        </tbody>
+
+        <tfoot className="bg-slate-50 text-slate-700 font-medium">
+            <tr>
+                <td className="p-3 text-left font-semibold">Accuracy</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td className="text-center font-semibold">0.7599</td>
+            </tr>
+            <tr>
+                <td className="p-3 text-left">Macro Avg</td>
+                <td>0.68</td><td>0.66</td><td>0.67</td><td>2399</td>
+            </tr>
+            <tr>
+                <td className="p-3 text-left">Weighted Avg</td>
+                <td>0.74</td><td>0.76</td><td>0.75</td><td>2399</td>
+            </tr>
+        </tfoot>
+
+    </table>
+</div>
+
+    
+    {/* ===== BASELINE CONFIG TABLE ===== */}
+<div className="mt-6 bg-white border rounded-2xl overflow-hidden">
+
+    <p className="font-bold text-slate-700 p-4 border-b">
+        Baseline Model Configuration
+    </p>
+
+    <table className="w-full text-sm">
+        <thead className="bg-slate-50">
+            <tr>
+                <th className="p-3 text-left">Component</th>
+                <th className="p-3 text-left">Value</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr className="border-t">
+                <td className="p-3 font-bold">Model</td>
+                <td>LogisticRegression</td>
+            </tr>
+            <tr className="border-t">
+                <td className="p-3 font-bold">C</td>
+                <td>3</td>
+            </tr>
+            <tr className="border-t">
+                <td className="p-3 font-bold">max_iter</td>
+                <td>2000</td>
+            </tr>
+            <tr className="border-t">
+                <td className="p-3 font-bold">n_jobs</td>
+                <td>-1</td>
+            </tr>
+            <tr className="border-t bg-slate-50">
+                <td className="p-3 font-bold">Feature</td>
+                <td>TF-IDF (Word + Char)</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</div>
+
+
+{/* ===================== MODEL CONFIG ===================== */}
+<div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+
+    <h3 className="text-2xl font-black text-slate-800 mb-6">
+        Model Configurations
+    </h3>
+
+    <table className="w-full text-sm border">
+        <thead className="bg-slate-50">
+            <tr>
+                <th className="p-3 text-left">Model</th>
+                <th className="p-3 text-left">Configuration</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr className="border-t">
+                <td className="p-3 font-bold">LinearSVC</td>
+                <td>default, random_state=SEED</td>
+            </tr>
+            <tr className="border-t">
+                <td className="p-3 font-bold">Logistic Regression</td>
+                <td>max_iter=1000, class_weight=balanced</td>
+            </tr>
+            <tr className="border-t">
+                <td className="p-3 font-bold">Naive Bayes</td>
+                <td>MultinomialNB(alpha=1.0)</td>
+            </tr>
+            <tr className="border-t">
+                <td className="p-3 font-bold">KNN</td>
+                <td>n_neighbors=5, weights=distance, metric=cosine</td>
+            </tr>
+            <tr className="border-t">
+                <td className="p-3 font-bold">Decision Tree</td>
+                <td>max_depth=20, class_weight=balanced</td>
+            </tr>
+            <tr className="border-t">
+                <td className="p-3 font-bold">Random Forest</td>
+                <td>n_estimators=100, class_weight=balanced</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+{/* ===================== COMPARISON IMAGE ===================== */}
+<div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm flex flex-col items-center">
+
+    <h3 className="text-xl font-black mb-4">Model Comparison</h3>
+
+    <img 
+        src={mlCompImg} 
+        className="w-full max-w-5xl rounded-xl border"
+    />
+
+</div>
+
+
+{/* ===================== TUNING SEARCH SPACE ===================== */}
+<div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+
+    <h3 className="text-2xl font-black mb-6">
+        Hyperparameter Search Space
+    </h3>
+
+    <table className="w-full text-xs border">
+        <thead className="bg-slate-50">
+            <tr>
+                <th className="p-3 text-left">Model</th>
+                <th className="p-3 text-left">Search Space</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr className="border-t">
+                <td className="p-3 font-bold">LinearSVC</td>
+                <td>C=[0.01,0.1,1,10,100], class_weight=[None,balanced]</td>
+            </tr>
+
+            <tr className="border-t">
+                <td className="p-3 font-bold">LogisticRegression</td>
+                <td>C=[0.01→100], penalty=l2, class_weight=[None,balanced]</td>
+            </tr>
+
+            <tr className="border-t">
+                <td className="p-3 font-bold">MultinomialNB</td>
+                <td>alpha=[0.01,0.1,0.5,1.0,2.0]</td>
+            </tr>
+
+            <tr className="border-t">
+                <td className="p-3 font-bold">KNN</td>
+                <td>n_neighbors=[3→15], weights, metric=[cosine, euclidean]</td>
+            </tr>
+
+            <tr className="border-t">
+                <td className="p-3 font-bold">RandomForest</td>
+                <td>n_estimators=[100,200,300], max_depth, min_samples_split</td>
+            </tr>
+
+            <tr className="border-t">
+                <td className="p-3 font-bold">DecisionTree</td>
+                <td>criterion, max_depth, min_samples_split, min_samples_leaf</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+</div>
+
+
+{/* ===================== TUNING RESULTS ===================== */}
+<div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+
+    <h3 className="text-2xl font-black mb-6">
+        Hyperparameter Tuning Results
+    </h3>
+
+    <table className="w-full text-sm border">
+        <thead className="bg-slate-50">
+            <tr>
+                <th className="p-3 text-left">Model</th>
+                <th className="p-3">Best F1</th>
+                <th className="p-3 text-left">Best Params</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr className="bg-blue-50 border-t">
+                <td className="p-3 font-bold">LogisticRegression ⭐</td>
+                <td className="font-bold text-blue-600">0.6547</td>
+                <td>C=1, penalty=l2, class_weight=balanced</td>
+            </tr>
+
+            <tr className="border-t">
+                <td className="p-3 font-bold">LinearSVC</td>
+                <td>0.6527</td>
+                <td>C=0.1, class_weight=balanced</td>
+            </tr>
+
+            <tr className="border-t">
+                <td className="p-3 font-bold">Naive Bayes</td>
+                <td>0.6486</td>
+                <td>alpha=0.1</td>
+            </tr>
+
+            <tr className="border-t">
+                <td className="p-3 font-bold">RandomForest</td>
+                <td>0.5637</td>
+                <td>n_estimators=200, max_depth=10</td>
+            </tr>
+
+            <tr className="border-t">
+                <td className="p-3 font-bold">KNN</td>
+                <td>0.5501</td>
+                <td>n_neighbors=7, metric=cosine</td>
+            </tr>
+
+            <tr className="border-t">
+                <td className="p-3 font-bold">DecisionTree</td>
+                <td>0.4673</td>
+                <td>max_depth=10, criterion=entropy</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+</div>
+
+
+</div>
+)}
+
+
+
+                
 
 
                 {/* =========================================
