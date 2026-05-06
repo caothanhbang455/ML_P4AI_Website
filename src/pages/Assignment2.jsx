@@ -26,7 +26,7 @@ const Assignment2 = () => {
 
         {/* 🔥 YOUTUBE BUTTON */}
         <a
-          href="https://www.youtube.com/watch?v=0TE0Cu69H10&t=77s"
+          href="https://youtu.be/ihol3DB_89c"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 bg-red-500 text-white px-6 py-3 rounded-xl font-semibold hover:scale-105 transition-all shadow-lg w-fit"
@@ -41,11 +41,10 @@ const Assignment2 = () => {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-bold transition-all ${
-              activeTab === tab.id
+            className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-bold transition-all ${activeTab === tab.id
                 ? "bg-blue-600 text-white shadow-xl shadow-blue-100"
                 : "bg-white text-slate-500 hover:bg-white/80 border border-slate-100"
-            }`}
+              }`}
           >
             <tab.icon size={22} /> {tab.label}
           </button>
